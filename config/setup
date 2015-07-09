@@ -1,0 +1,3 @@
+export FRZ_BASE=$PWD
+export PATH=$PATH:$FRZ_BASE/python
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FRZ_BASE/lib

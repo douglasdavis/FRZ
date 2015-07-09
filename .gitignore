@@ -1,0 +1,9 @@
+lib
+html
+*.root
+*.pyc
+*.o
+*.so
+*.dylib
+plot*.eps
+plot*.pdf
