@@ -6,6 +6,7 @@ TARGET := lib/libFRZ.so
 DICT   := FRZdict
 
 all: $(TARGET)
+	-@$(RM) $(FRZ_BASE)/lib/$(DICT)_rdict.pcm
 	-@ln -s $(FRZ_BASE)/src/$(DICT)_rdict.pcm $(FRZ_BASE)/lib/$(DICT)_rdict.pcm
 
 $(TARGET): src/FinalState.o src/Lepton.o src/LeptonPair.o src/MET.o \
