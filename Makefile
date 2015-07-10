@@ -1,3 +1,7 @@
+ifndef FRZ_BASE
+$(error FRZ_BASE not set, source config/setup)
+endif
+
 CXX      := g++
 CXXFLAGS := -I$(FRZ_BASE) -I$(FRZ_BASE)/include -O2 $(shell root-config --cflags)
 LDFLAGS  := -L$(FRZ_BASE)/lib $(shell root-config --glibs)
