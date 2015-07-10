@@ -15,7 +15,7 @@
 
 // C++
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class TFile;
 class TTree;
@@ -58,7 +58,7 @@ namespace FRZ {
     void addFileName(const std::string& fn);
     bool run(const std::string& out_name);
     void makeRatio(TH1D* ratio, const TH1D *mc, const TH1D* data);
-    void stacker(const std::map<std::string,TH1D*>& hm, THStack* stack);
+    void stacker(const std::unordered_map<std::string,TH1D*>& hm, THStack* stack);
 
   };
 

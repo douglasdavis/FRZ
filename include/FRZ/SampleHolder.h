@@ -1,9 +1,9 @@
 /** @file  SampleHolder.h
  *  @brief FRZ::SampleHolder class header
  *  @class FRZ::SampleHolder
- *  @brief holds map of Samples and access functions
+ *  @brief holds unordered_map of Samples and access functions
  *
- *  This class holds an std::map
+ *  This class holds an std::unordered_map
  *  of MC Samples for easy access to them
  *  along with functions to deal with them
  *
@@ -14,7 +14,7 @@
 #define FRZ_SAMPLEHOLDER_H
 
 // C++
-#include <map>
+#include <unordered_map>
 #include <iostream>
 
 // FRZ
@@ -26,7 +26,7 @@ namespace FRZ {
 
   private:
 
-    std::map<int,FRZ::Sample> m_samples;
+    std::unordered_map<int,FRZ::Sample> m_samples;
 
   public:
 
@@ -36,7 +36,7 @@ namespace FRZ {
     /// virtual destructor
     virtual ~SampleHolder();
 
-    /// add a new entry in the samples map for a new Sample
+    /// add a new entry in the samples unordered_map for a new Sample
     void addSample(const int id, const FRZ::Sample& samp) {
       m_samples[id] = samp;
     }

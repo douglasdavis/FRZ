@@ -49,7 +49,7 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   plot_props MET_plot_props(30,0,150);
   std::string MET_title       = ";E^{miss}_{T} [GeV];Events/"+std::to_string((int)MET_plot_props.binsize)+" GeV";
   std::string MET_ratio_title = ";E^{miss}_{T} [GeV];Data/MC";
-  std::map<std::string,TH1D*> MET;
+  std::unordered_map<std::string,TH1D*> MET;
   auto MET_ratio = new TH1D("MET_ratio",MET_ratio_title.c_str(),
 			    MET_plot_props.nbins,
 			    MET_plot_props.xmin,
@@ -58,7 +58,7 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   plot_props tlpts_plot_props(3,20,230);
   std::string tlpts_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string((int)tlpts_plot_props.binsize)+" GeV";
   std::string tlpts_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
-  std::map<std::string,TH1D*> tlpts;
+  std::unordered_map<std::string,TH1D*> tlpts;
   auto tlpts_ratio = new TH1D("tlpts_ratio",tlpts_ratio_title.c_str(),
 			      tlpts_plot_props.nbins,
 			      tlpts_plot_props.xmin,
@@ -67,7 +67,7 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   plot_props tlpt_plot_props(20,20,220);
   std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string((int)tlpt_plot_props.binsize)+" GeV";
   std::string tlpt_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
-  std::map<std::string,TH1D*> tlpt;
+  std::unordered_map<std::string,TH1D*> tlpt;
   auto tlpt_ratio = new TH1D("tlpt_ratio",tlpt_ratio_title.c_str(),
 			     tlpt_plot_props.nbins,
 			     tlpt_plot_props.xmin,
@@ -127,29 +127,29 @@ bool FRZ::HistMaker::run(const std::string& out_name)
     temp_hist_tlpts->Scale(weight);
 
     if ( ptype == "zlf" || ptype == "zhf" ) {
-      MET["zjets"]->Add(temp_hist_MET);
-      tlpt["zjets"]->Add(temp_hist_tlpt);
-      tlpts["zjets"]->Add(temp_hist_tlpts);
+      MET.at("zjets")->Add(temp_hist_MET);
+      tlpt.at("zjets")->Add(temp_hist_tlpt);
+      tlpts.at("zjets")->Add(temp_hist_tlpts);
     }
     else if ( ptype == "ww" || ptype == "wz" || ptype == "zz" ) {
-      MET["diboson"]->Add(temp_hist_MET);
-      tlpt["diboson"]->Add(temp_hist_tlpt);
-      tlpts["diboson"]->Add(temp_hist_tlpts);
+      MET.at("diboson")->Add(temp_hist_MET);
+      tlpt.at("diboson")->Add(temp_hist_tlpt);
+      tlpts.at("diboson")->Add(temp_hist_tlpts);
     }
     else if ( ptype == "ttbarW" || ptype == "ttbarZ" ) {
-      MET["ttbarV"]->Add(temp_hist_MET);
-      tlpt["ttbarV"]->Add(temp_hist_tlpt);
-      tlpts["ttbarV"]->Add(temp_hist_tlpts);
+      MET.at("ttbarV")->Add(temp_hist_MET);
+      tlpt.at("ttbarV")->Add(temp_hist_tlpt);
+      tlpts.at("ttbarV")->Add(temp_hist_tlpts);
     }
     else if ( ptype == "data" ) {
-      MET["data"]->Add(temp_hist_MET);
-      tlpt["data"]->Add(temp_hist_tlpt);
-      tlpts["data"]->Add(temp_hist_tlpts);
+      MET.at("data")->Add(temp_hist_MET);
+      tlpt.at("data")->Add(temp_hist_tlpt);
+      tlpts.at("data")->Add(temp_hist_tlpts);
     }
     else {
-      MET[ptype]->Add(temp_hist_MET);
-      tlpt[ptype]->Add(temp_hist_tlpt);
-      tlpts[ptype]->Add(temp_hist_tlpts);
+      MET.at(ptype)->Add(temp_hist_MET);
+      tlpt.at(ptype)->Add(temp_hist_tlpt);
+      tlpts.at(ptype)->Add(temp_hist_tlpts);
     }
     
   } // for all trees
@@ -158,21 +158,21 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   // calculate the ratio histograms.
   auto stack_MET = new THStack("stack_MET",MET_title.c_str());
   stacker(MET,stack_MET);
-  makeRatio(MET_ratio,(TH1D*)stack_MET->GetStack()->Last(),MET["data"]);
+  makeRatio(MET_ratio,(TH1D*)stack_MET->GetStack()->Last(),MET.at("data"));
 
   auto stack_tlpt = new THStack("stack_tlpt",tlpt_title.c_str());
   stacker(tlpt,stack_tlpt);
-  makeRatio(tlpt_ratio,(TH1D*)stack_tlpt->GetStack()->Last(),tlpt["data"]);
+  makeRatio(tlpt_ratio,(TH1D*)stack_tlpt->GetStack()->Last(),tlpt.at("data"));
 
   auto stack_tlpts = new THStack("stack_tlpts",tlpts_title.c_str());
   stacker(tlpts,stack_tlpts);
-  makeRatio(tlpts_ratio,(TH1D*)stack_tlpts->GetStack()->Last(),tlpts["data"]);
+  makeRatio(tlpts_ratio,(TH1D*)stack_tlpts->GetStack()->Last(),tlpts.at("data"));
 
   TFile *out_file = new TFile(out_name.c_str(),"RECREATE");
   for ( auto const& k : procs ) {
-    MET[k]->Write();
-    tlpt[k]->Write();
-    tlpts[k]->Write();
+    MET.at(k)->Write();
+    tlpt.at(k)->Write();
+    tlpts.at(k)->Write();
   }
   MET_ratio->Write();
   tlpt_ratio->Write();
@@ -203,7 +203,7 @@ void FRZ::HistMaker::makeRatio(TH1D* ratio, const TH1D* mc, const TH1D* data) {
   }
 }
 
-void FRZ::HistMaker::stacker(const std::map<std::string,TH1D*>& hm, THStack* stack) {
+void FRZ::HistMaker::stacker(const std::unordered_map<std::string,TH1D*>& hm, THStack* stack) {
   stack->Add(hm.at("ttbarV"));
   stack->Add(hm.at("ttbar"));
   stack->Add(hm.at("diboson"));

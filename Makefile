@@ -1,3 +1,8 @@
+###########################################################
+## Makefile for the FRZ (Fake Rate using Z+jets) library ## 
+## Author: Douglas Davis < ddavis@phy.duke.edu >         ##
+###########################################################
+
 ifndef FRZ_BASE
 $(error FRZ_BASE not set, source config/setup)
 endif
@@ -13,12 +18,12 @@ else
 	LIBSUFFIX = so
 endif
 
-TARGET := lib/libFRZ.$(LIBSUFFIX)
-DICT   := FRZdict
+TARGET  := lib/libFRZ.$(LIBSUFFIX)
 
+DICT    := FRZdict
 SOURCES := $(wildcard src/*.cxx)
 OBJECTS := $(patsubst %.cxx,%.o,$(SOURCES))
-HEADERS  = $(filter-out include/FRZ/LinkDef.h \
+HEADERS := $(filter-out include/FRZ/LinkDef.h \
 		include/FRZ/Common.h include/FRZ/Utils.h,\
 		$(wildcard include/FRZ/*.h))
 
@@ -28,16 +33,16 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS) src/$(DICT).o
 	@mkdir -p $(FRZ_BASE)/lib
-	@echo ">> Linking shared object library $@";$(CXX) $(LDFLAGS) -shared -o $@ $^
+	@echo "<< Linking shared object library $@ >>";$(CXX) $(LDFLAGS) -shared -o $@ $^
 
 src/$(DICT).cxx: $(HEADERS) include/FRZ/LinkDef.h
-	@echo ">> Generating ROOT dictionary $@";rootcint -f $@ -I$(FRZ_BASE)/include $^
+	@echo "<< Generating ROOT dictionary $@ >>";rootcint -f $@ -I$(FRZ_BASE)/include $^
 
 src/$(DICT).o: src/$(DICT).cxx
-	@echo ">> Compiling object $@";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
+	@echo "<< Compiling object $@ >>";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
 
 %.o: %.cxx
-	@echo ">> Compiling object $@";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
+	@echo "<< Compiling object $@ >>";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean
 
