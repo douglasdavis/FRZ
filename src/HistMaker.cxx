@@ -49,7 +49,7 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   plot_props MET_plot_props(30,0,150);
   std::string MET_title       = ";E^{miss}_{T} [GeV];Events/"+std::to_string((int)MET_plot_props.binsize)+" GeV";
   std::string MET_ratio_title = ";E^{miss}_{T} [GeV];Data/MC";
-  std::unordered_map<std::string,TH1D*> MET;
+  std::map<std::string,TH1D*> MET;
   auto MET_ratio = new TH1D("MET_ratio",MET_ratio_title.c_str(),
 			    MET_plot_props.nbins,
 			    MET_plot_props.xmin,
@@ -58,7 +58,7 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   plot_props tlpts_plot_props(3,20,230);
   std::string tlpts_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string((int)tlpts_plot_props.binsize)+" GeV";
   std::string tlpts_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
-  std::unordered_map<std::string,TH1D*> tlpts;
+  std::map<std::string,TH1D*> tlpts;
   auto tlpts_ratio = new TH1D("tlpts_ratio",tlpts_ratio_title.c_str(),
 			      tlpts_plot_props.nbins,
 			      tlpts_plot_props.xmin,
@@ -67,7 +67,7 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   plot_props tlpt_plot_props(20,20,220);
   std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string((int)tlpt_plot_props.binsize)+" GeV";
   std::string tlpt_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
-  std::unordered_map<std::string,TH1D*> tlpt;
+  std::map<std::string,TH1D*> tlpt;
   auto tlpt_ratio = new TH1D("tlpt_ratio",tlpt_ratio_title.c_str(),
 			     tlpt_plot_props.nbins,
 			     tlpt_plot_props.xmin,
@@ -203,7 +203,7 @@ void FRZ::HistMaker::makeRatio(TH1D* ratio, const TH1D* mc, const TH1D* data) {
   }
 }
 
-void FRZ::HistMaker::stacker(const std::unordered_map<std::string,TH1D*>& hm, THStack* stack) {
+void FRZ::HistMaker::stacker(const std::map<std::string,TH1D*>& hm, THStack* stack) {
   stack->Add(hm.at("ttbarV"));
   stack->Add(hm.at("ttbar"));
   stack->Add(hm.at("diboson"));
