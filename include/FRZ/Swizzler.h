@@ -22,6 +22,7 @@ class TFile;
 
 // FRZ
 #include "FRZ/Common.h"
+#include "FRZ/SampleHolder.h"
 
 namespace FRZ {
 
