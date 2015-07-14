@@ -56,7 +56,7 @@ namespace FRZ {
     void setThirdLepOpt(const int i) { m_thirdLepOpt = i; }
     
     void addFileName(const std::string& fn);
-    bool run(const std::string& out_name);
+    bool run(const std::string& out_name, const int third_tight);
     void makeRatio(TH1D* ratio, const TH1D *mc, const TH1D* data);
     void stacker(const std::map<std::string,TH1D*>& hm, THStack* stack);
 

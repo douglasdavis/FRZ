@@ -30,7 +30,7 @@ void FRZ::HistMaker::addFileName(const std::string& fn)
   m_files.push_back(new TFile((fn).c_str(),"READ"));
 }
 
-bool FRZ::HistMaker::run(const std::string& out_name)
+bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
 {
   if ( m_files.empty() ) return false;
 
@@ -43,11 +43,15 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   if      ( m_thirdLepOpt == 11 ) thirdLepXtitle = "(e)";
   else if ( m_thirdLepOpt == 13 ) thirdLepXtitle = "(#mu)";
   else                            return false;
-			         
+
+  bool third_tight_b = false;
+  if ( third_tight == 1 ) third_tight_b = true;
+  if ( third_tight == 2 ) third_tight_b = false;
+  
   std::array<std::string,5> procs { { "zjets" , "diboson" , "ttbarV" , "ttbar" , "data" } };
 
   plot_props MET_plot_props(30,0,150);
-  std::string MET_title       = ";E^{miss}_{T} [GeV];Events/"+std::to_string((int)MET_plot_props.binsize)+" GeV";
+  std::string MET_title       = ";E^{miss}_{T} [GeV];Events/"+std::to_string(MET_plot_props.binsize)+" GeV";
   std::string MET_ratio_title = ";E^{miss}_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> MET;
   auto MET_ratio = new TH1D("MET_ratio",MET_ratio_title.c_str(),
@@ -55,8 +59,8 @@ bool FRZ::HistMaker::run(const std::string& out_name)
 			    MET_plot_props.xmin,
 			    MET_plot_props.xmax);
 
-  plot_props tlpts_plot_props(3,20,230);
-  std::string tlpts_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string((int)tlpts_plot_props.binsize)+" GeV";
+  plot_props tlpts_plot_props(3,12,230);
+  std::string tlpts_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string(tlpts_plot_props.binsize)+" GeV";
   std::string tlpts_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlpts;
   auto tlpts_ratio = new TH1D("tlpts_ratio",tlpts_ratio_title.c_str(),
@@ -64,8 +68,8 @@ bool FRZ::HistMaker::run(const std::string& out_name)
 			      tlpts_plot_props.xmin,
 			      tlpts_plot_props.xmax);
 
-  plot_props tlpt_plot_props(20,20,220);
-  std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string((int)tlpt_plot_props.binsize)+" GeV";
+  plot_props tlpt_plot_props(20,12,220);
+  std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string(tlpt_plot_props.binsize)+" GeV";
   std::string tlpt_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlpt;
   auto tlpt_ratio = new TH1D("tlpt_ratio",tlpt_ratio_title.c_str(),
@@ -73,6 +77,12 @@ bool FRZ::HistMaker::run(const std::string& out_name)
 			     tlpt_plot_props.xmin,
 			     tlpt_plot_props.xmax);
 
+  std::string tlptv_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events";
+  std::string tlptv_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
+  std::map<std::string,TH1D*> tlptv;
+  double var_bins[4] = {12,30,80,250};
+  auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),3,var_bins);
+  
   for ( auto const& entry : procs ) {
     MET[entry] = new TH1D(("MET_"+entry).c_str(),MET_title.c_str(),
 			  MET_plot_props.nbins,MET_plot_props.xmin,MET_plot_props.xmax);
@@ -82,6 +92,8 @@ bool FRZ::HistMaker::run(const std::string& out_name)
 
     tlpts[entry] = new TH1D(("tlpts_"+entry).c_str(),tlpts_title.c_str(),
 			    tlpts_plot_props.nbins,tlpts_plot_props.xmin,tlpts_plot_props.xmax);
+
+    tlptv[entry] = new TH1D(("tlptv_"+entry).c_str(),tlptv_title.c_str(),3,var_bins);
   }
 
   // loop over all trees, make temporary histograms,
@@ -102,9 +114,11 @@ bool FRZ::HistMaker::run(const std::string& out_name)
 				    tlpts_plot_props.xmin,
 				    tlpts_plot_props.xmax);
 
+    auto temp_hist_tlptv = new TH1D(("temp_hist_tlptv"+std::to_string(i)).c_str(),"nothing",3,var_bins);
+    
     FRZ::FinalState *fs     = 0;
     FRZ::Sample     *samp   = 0;
-    float             weight = 0;
+    float            weight = 0;
     m_FRZtrees.at(i)->SetBranchAddress("FinalState",&fs);
     m_sampleTrees.at(i)->SetBranchAddress("sample",&samp);
     m_sampleTrees.at(i)->SetBranchAddress("weight",&weight);
@@ -116,40 +130,55 @@ bool FRZ::HistMaker::run(const std::string& out_name)
       auto third_lep_idx = fs->thirdLeptonIdx();
       //auto z_cand_idx    = fs->z_candidate_idx();
       if ( fs->leptons().at(third_lep_idx).obj().pdgId() == m_thirdLepOpt ) {
-	temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
-	temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
-	temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	if ( ( third_tight == 0 || third_tight == 1 ) && third_tight_b == fs->thirdTight() ) {
+	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
+	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	}
+	if ( third_tight == 2 ) {
+	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
+	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	}
       } // if third lepton is requestions e or mu
     } // for all in current tree
 
     temp_hist_MET->Scale(weight);
     temp_hist_tlpt->Scale(weight);
     temp_hist_tlpts->Scale(weight);
+    temp_hist_tlptv->Scale(weight);
 
     if ( ptype == "zlf" || ptype == "zhf" ) {
       MET.at("zjets")->Add(temp_hist_MET);
       tlpt.at("zjets")->Add(temp_hist_tlpt);
       tlpts.at("zjets")->Add(temp_hist_tlpts);
+      tlptv.at("zjets")->Add(temp_hist_tlptv);
     }
     else if ( ptype == "ww" || ptype == "wz" || ptype == "zz" ) {
       MET.at("diboson")->Add(temp_hist_MET);
       tlpt.at("diboson")->Add(temp_hist_tlpt);
       tlpts.at("diboson")->Add(temp_hist_tlpts);
+      tlptv.at("diboson")->Add(temp_hist_tlptv);
     }
     else if ( ptype == "ttbarW" || ptype == "ttbarZ" ) {
       MET.at("ttbarV")->Add(temp_hist_MET);
       tlpt.at("ttbarV")->Add(temp_hist_tlpt);
       tlpts.at("ttbarV")->Add(temp_hist_tlpts);
+      tlptv.at("ttbarV")->Add(temp_hist_tlptv);
     }
     else if ( ptype == "data" ) {
       MET.at("data")->Add(temp_hist_MET);
       tlpt.at("data")->Add(temp_hist_tlpt);
       tlpts.at("data")->Add(temp_hist_tlpts);
+      tlptv.at("data")->Add(temp_hist_tlptv);
     }
     else {
       MET.at(ptype)->Add(temp_hist_MET);
       tlpt.at(ptype)->Add(temp_hist_tlpt);
       tlpts.at(ptype)->Add(temp_hist_tlpts);
+      tlptv.at(ptype)->Add(temp_hist_tlptv);
     }
     
   } // for all trees
@@ -168,16 +197,22 @@ bool FRZ::HistMaker::run(const std::string& out_name)
   stacker(tlpts,stack_tlpts);
   makeRatio(tlpts_ratio,(TH1D*)stack_tlpts->GetStack()->Last(),tlpts.at("data"));
 
+  auto stack_tlptv = new THStack("stack_tlptv",tlptv_title.c_str());
+  stacker(tlptv,stack_tlptv);
+  makeRatio(tlptv_ratio,(TH1D*)stack_tlptv->GetStack()->Last(),tlptv.at("data"));
+  
   TFile *out_file = new TFile(out_name.c_str(),"RECREATE");
   for ( auto const& k : procs ) {
     MET.at(k)->Write();
     tlpt.at(k)->Write();
     tlpts.at(k)->Write();
+    tlptv.at(k)->Write();
   }
   MET_ratio->Write();
   tlpt_ratio->Write();
   tlpts_ratio->Write();
-
+  tlptv_ratio->Write();
+  
   out_file->Close();      
 
   return true;

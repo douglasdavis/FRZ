@@ -7,14 +7,15 @@ import os
 FRZ_BASE = str(os.environ['FRZ_BASE'])
 
 parser = argparse.ArgumentParser(description='FRZ python controller')
-parser.add_argument('-s','--swizzle',      help='flag to run Swizzler on a top mini ntuple',required=False,action='store_true')
-parser.add_argument('-d','--data',         help='flag to tell job if it is data',           required=False,action='store_true')
-parser.add_argument('-p','--pileup',       help='flag to tell job to consider pileup',      required=False,action='store_true')
-parser.add_argument('-i','--in-file',      help='input file name',                          required=False)
-parser.add_argument('-m','--make-hists',   help='run the histogram maker',                  required=False,action='store_true')
-parser.add_argument('-l','--third-lep',    help='third lepton pdg, 11/13 (for e/mu)',       required=False)
-parser.add_argument('-o','--out-file',     help='output file for histogram maker',          required=False)
-parser.add_argument('-j','--json-to-root', help='convert sample json file to ROOT file',    required=False,action='store_true')
+parser.add_argument('-s','--swizzle',      help='flag to run Swizzler on a top mini ntuple', required=False,action='store_true')
+parser.add_argument('-d','--data',         help='flag to tell job if it is data',            required=False,action='store_true')
+parser.add_argument('-p','--pileup',       help='flag to tell job to consider pileup',       required=False,action='store_true')
+parser.add_argument('-i','--in-file',      help='input file name',                           required=False)
+parser.add_argument('-m','--make-hists',   help='run the histogram maker',                   required=False,action='store_true')
+parser.add_argument('-l','--third-lep',    help='third lepton pdg, 11/13 (for e/mu)',        required=False)
+parser.add_argument('-o','--out-file',     help='output file for histogram maker',           required=False)
+parser.add_argument('-j','--json-to-root', help='convert sample json file to ROOT file',     required=False,action='store_true')
+parser.add_argument('-t','--third-tight',  help='third lepton right flag (0 no,1 yes,2 both',required=False,type=int,choices=[0,1,2],default=2)
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -27,7 +28,7 @@ import ROOT
 ROOT.gSystem.Load(FRZ_BASE+'/lib/libFRZ')
 from ROOT import FRZ
 
-if args_tf.swizzle == True or args_tf.json_to_root == True:
+if args_tf.swizzle or args_tf.json_to_root:
     sample_holder = FRZ.SampleHolder()
     data = json.load(open(FRZ_BASE+'/config/samples_mc12a_nominal.json','r'))
     for key1,val1 in data.iteritems():
@@ -56,7 +57,7 @@ if args_tf.swizzle == True or args_tf.json_to_root == True:
                 a_sample.set_BR_mumu(val3['BR_mumu'])
                 sample_holder.addSample(a_sample.ID(),a_sample)
 
-    if args_tf.json_to_root == True:
+    if args_tf.json_to_root:
         out_file    = ROOT.TFile('samples_mc12a_nominal.root','RECREATE')
         sample_tree = ROOT.TTree('sample_tree','sample_tree')
         sample_tree.Branch('sample_holder',sample_holder)
@@ -64,8 +65,8 @@ if args_tf.swizzle == True or args_tf.json_to_root == True:
         sample_tree.Write()
         out_file.Close()
 
-    if args_tf.swizzle == True:
-        if args_tf.data == True:
+    if args_tf.swizzle:
+        if args_tf.data:
             split_me   = args['in_file']
             parts_full = split_me.split('/')
             out_file   = split_me[len(split_me)-1]
@@ -82,12 +83,12 @@ if args_tf.swizzle == True or args_tf.json_to_root == True:
             a_swizz.addFile(args['in_file'])
             a_swizz.loopToFile(out_file,sample_holder)
 
-if args_tf.make_hists == True:
+if args_tf.make_hists:
     file_names = os.listdir(FRZ_BASE+'/swizzled_files')
     hist_maker = FRZ.HistMaker()
     for f in file_names: hist_maker.addFileName(FRZ_BASE+'/swizzled_files/'+f)
     of = args['out_file']
     tl = int(args['third_lep'])
     hist_maker.setThirdLepOpt(tl)
-    if hist_maker.run(of) == False:
+    if hist_maker.run(of,args['third_tight']) == False:
         print 'Something bad happened in hist_maker::run'

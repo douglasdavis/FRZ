@@ -113,7 +113,7 @@ def pad_margining(pad1,pad2):
     pad2.SetFrameFillColor(0)
     pad2.SetFrameBorderMode(0)
 
-legend = ROOT.TLegend(.8,.3,1.1,.7)
+legend = ROOT.TLegend(.815,.55,1.025,.92)
 format_legend(legend)
 leg_data = ROOT.TH1D('leg_data','leg_data',100,1,0)
 leg_data.SetLineColor(ROOT.kBlack)
