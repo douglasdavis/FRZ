@@ -115,27 +115,27 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
   // loop over all trees, make temporary histograms,
   // add them to the correct total histograms.
   for ( unsigned int i = 0; i < m_FRZtrees.size(); ++i ) {
-    auto temp_hist_MET = new TH1D(("temp_hist_MET"+std::to_string(i)).c_str(),"nothing",
+    auto temp_hist_MET = new TH1D("temp_hist_MET","nothing",
 				  MET_plot_props.nbins,
 				  MET_plot_props.xmin,
 				  MET_plot_props.xmax);
 
-    auto temp_hist_njets = new TH1D(("temp_hist_njets"+std::to_string(i)).c_str(),"nothing",
+    auto temp_hist_njets = new TH1D("temp_hist_njets","nothing",
 				    njets_plot_props.nbins,
 				    njets_plot_props.xmin,
 				    njets_plot_props.xmax);
 
-    auto temp_hist_tlpt = new TH1D(("temp_hist_tlpt"+std::to_string(i)).c_str(),"nothing",
+    auto temp_hist_tlpt = new TH1D("temp_hist_tlpt","nothing",
 				   tlpt_plot_props.nbins,
 				   tlpt_plot_props.xmin,
 				   tlpt_plot_props.xmax);
 
-    auto temp_hist_tlpts = new TH1D(("temp_hist_tlpts"+std::to_string(i)).c_str(),"nothing",
+    auto temp_hist_tlpts = new TH1D("temp_hist_tlpts","nothing",
 				    tlpts_plot_props.nbins,
 				    tlpts_plot_props.xmin,
 				    tlpts_plot_props.xmax);
 
-    auto temp_hist_tlptv = new TH1D(("temp_hist_tlptv"+std::to_string(i)).c_str(),"nothing",3,var_bins);
+    auto temp_hist_tlptv = new TH1D("temp_hist_tlptv","nothing",3,var_bins);
     
     FRZ::FinalState *fs     = 0;
     FRZ::Sample     *samp   = 0;
@@ -215,6 +215,12 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
       tlptv.at(ptype)->Add(temp_hist_tlptv);
       njets.at(ptype)->Add(temp_hist_njets);
     }
+    
+    delete temp_hist_MET;
+    delete temp_hist_tlpt;
+    delete temp_hist_tlpts;
+    delete temp_hist_tlptv;
+    delete temp_hist_njets;
     
   } // for all trees
   
