@@ -30,6 +30,7 @@ HEADERS := $(filter-out include/FRZ/LinkDef.h \
 all: $(TARGET)
 	-@$(RM) $(FRZ_BASE)/lib/$(DICT)_rdict.pcm
 	-@ln -s $(FRZ_BASE)/src/$(DICT)_rdict.pcm $(FRZ_BASE)/lib/$(DICT)_rdict.pcm
+	@echo "<< Built >>"
 
 $(TARGET): $(OBJECTS) src/$(DICT).o
 	@mkdir -p $(FRZ_BASE)/lib
@@ -41,7 +42,7 @@ src/$(DICT).cxx: $(HEADERS) include/FRZ/LinkDef.h
 src/$(DICT).o: src/$(DICT).cxx
 	@echo "<< Compiling object $@ >>";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
 
-%.o: %.cxx
+src/%.o: src/%.cxx
 	@echo "<< Compiling object $@ >>";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean

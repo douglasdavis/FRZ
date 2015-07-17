@@ -7,15 +7,15 @@ import os
 FRZ_BASE = str(os.environ['FRZ_BASE'])
 
 parser = argparse.ArgumentParser(description='FRZ python controller')
-parser.add_argument('-s','--swizzle',      help='flag to run Swizzler on a top mini ntuple', required=False,action='store_true')
-parser.add_argument('-d','--data',         help='flag to tell job if it is data',            required=False,action='store_true')
-parser.add_argument('-p','--pileup',       help='flag to tell job to consider pileup',       required=False,action='store_true')
-parser.add_argument('-i','--in-file',      help='input file name',                           required=False)
-parser.add_argument('-m','--make-hists',   help='run the histogram maker',                   required=False,action='store_true')
-parser.add_argument('-l','--third-lep',    help='third lepton pdg, 11/13 (for e/mu)',        required=False)
-parser.add_argument('-o','--out-file',     help='output file for histogram maker',           required=False)
-parser.add_argument('-j','--json-to-root', help='convert sample json file to ROOT file',     required=False,action='store_true')
-parser.add_argument('-t','--third-tight',  help='third lepton right flag (0 no,1 yes,2 both',required=False,type=int,choices=[0,1,2],default=2)
+parser.add_argument('-s','--swizzle',      help='flag to run Swizzler on a top mini ntuple',  required=False,action='store_true')
+parser.add_argument('-d','--data',         help='flag to tell job if it is data',             required=False,action='store_true')
+parser.add_argument(     '--pileup',       help='flag to tell job to consider pileup',        required=False,action='store_true')
+parser.add_argument('-i','--in-file',      help='input file name',                            required=False)
+parser.add_argument(     '--make-hists',   help='run the histogram maker',                    required=False,action='store_true')
+parser.add_argument('-p','--third-pdg',    help='third lepton pdg, 11/13 (for e/mu)',         required=False)
+parser.add_argument('-o','--out-file',     help='output file for histogram maker',            required=False)
+parser.add_argument('-j','--json-to-root', help='convert sample json file to ROOT file',      required=False,action='store_true')
+parser.add_argument(     '--third-loose',  help='third lepton right flag (0 no,1 yes,2 both)',required=False,type=int,choices=[0,1,2],default=2)
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -88,7 +88,7 @@ if args_tf.make_hists:
     hist_maker = FRZ.HistMaker()
     for f in file_names: hist_maker.addFileName(FRZ_BASE+'/swizzled_files/'+f)
     of = args['out_file']
-    tl = int(args['third_lep'])
+    tl = int(args['third_pdg'])
     hist_maker.setThirdLepOpt(tl)
-    if hist_maker.run(of,args['third_tight']) == False:
+    if hist_maker.run(of,args['third_loose']) == False:
         print 'Something bad happened in hist_maker::run'

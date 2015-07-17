@@ -30,7 +30,7 @@ void FRZ::HistMaker::addFileName(const std::string& fn)
   m_files.push_back(new TFile((fn).c_str(),"READ"));
 }
 
-bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
+bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 {
   if ( m_files.empty() ) return false;
 
@@ -44,9 +44,9 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
   else if ( m_thirdLepOpt == 13 ) thirdLepXtitle = "(#mu)";
   else                            return false;
 
-  bool third_tight_b = false;
-  if ( third_tight == 1 ) third_tight_b = true;
-  if ( third_tight == 2 ) third_tight_b = false;
+  bool third_loose_b = false;
+  if ( third_loose == 1 ) third_loose_b = true;
+  if ( third_loose == 2 ) third_loose_b = false;
   
   std::array<std::string,5> procs { { "zjets" , "diboson" , "ttbarV" , "ttbar" , "data" } };
 
@@ -151,7 +151,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
       auto third_lep_idx = fs->thirdLeptonIdx();
       //auto z_cand_idx    = fs->z_candidate_idx();
       if ( fs->leptons().at(third_lep_idx).obj().pdgId() == m_thirdLepOpt ) {
-	if ( ( third_tight == 0 || third_tight == 1 ) && third_tight_b == fs->thirdTight() ) {
+	if ( ( third_loose == 0 || third_loose == 1 ) && third_loose_b == fs->thirdLoose() ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
 	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
 	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
@@ -161,7 +161,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_tight)
 	  else
 	    temp_hist_njets->Fill(7);
 	}
-	if ( third_tight == 2 ) {
+	if ( third_loose == 2 ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
 	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
 	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);

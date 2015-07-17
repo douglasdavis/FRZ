@@ -14,7 +14,6 @@
 
 // C++
 #include <vector>
-#include <utility>
 
 // FRZ
 #include "FRZ/Lepton.h"
@@ -36,9 +35,9 @@ namespace FRZ {
     double                                            m_Ht;              //< scalar sum of jet, Lepton pT
     unsigned int                                      m_ZcandidateIdx;   //< index of the z candidate pair in the container
     unsigned int                                      m_thirdLeptonIdx;  //< third Lepton idx corresponding to the Lepton pair
-    bool                                              m_allTight;        //< if all leptons in the event are tight
-    bool                                              m_thirdTight;      //< if the third lepton is tight;
-    bool                                              m_pairTight;       //< if the leptons in the pair are tight
+    bool                                              m_allLoose;        //< if all leptons in the event are loose
+    bool                                              m_thirdLoose;      //< if the third lepton is loose;
+    bool                                              m_pairLoose;       //< if the leptons in the pair are loose
     
   public:
 
@@ -63,9 +62,10 @@ namespace FRZ {
     double       Ht()             const { return m_Ht;             }
     unsigned int ZcandidateIdx()  const { return m_ZcandidateIdx;  }
     unsigned int thirdLeptonIdx() const { return m_thirdLeptonIdx; }
-    bool         allTight()       const { return m_allTight;       }
-    bool         thirdTight()     const { return m_thirdTight;     }
-    bool         pairTight()      const { return m_pairTight;      }
+
+    bool         allLoose()       const { return m_allLoose;       }
+    bool         thirdLoose()     const { return m_thirdLoose;     }
+    bool         pairLoose()      const { return m_pairLoose;      }
 
     /// clear all of the containers
     void clear() {

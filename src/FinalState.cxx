@@ -45,10 +45,11 @@ void FRZ::FinalState::evaluateSelf() {
     }
   }
 
-  m_thirdTight = false; m_pairTight = false; m_allTight = false;
+  m_thirdLoose = false; m_pairLoose = false; m_allLoose = false;
   
-  if ( !m_leptons.at(m_thirdLeptonIdx).obj().isLoose() ) m_thirdTight = true;
-  if ( !m_leptons.at(m_leptonPairs.at(m_ZcandidateIdx).obj().lepton1idx()).obj().isLoose() &&
-       !m_leptons.at(m_leptonPairs.at(m_ZcandidateIdx).obj().lepton2idx()).obj().isLoose() ) m_pairTight = true;
-  if ( m_thirdTight && m_pairTight ) m_allTight = true;  
+  if ( m_leptons.at(m_thirdLeptonIdx).obj().isLoose() ) m_thirdLoose = true;
+  if ( m_leptons.at(m_leptonPairs.at(m_ZcandidateIdx).obj().lepton1idx()).obj().isLoose() &&
+       m_leptons.at(m_leptonPairs.at(m_ZcandidateIdx).obj().lepton2idx()).obj().isLoose() ) m_pairLoose = true;
+  if ( m_thirdLoose && m_pairLoose ) m_allLoose = true;  
+
 }
