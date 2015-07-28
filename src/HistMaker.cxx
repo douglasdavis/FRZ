@@ -153,9 +153,9 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       if ( fs->leptons().at(third_lep_idx).obj().pdgId() == m_thirdLepOpt ) {
 	if ( ( third_loose == 0 || third_loose == 1 ) && third_loose_b == fs->thirdLoose() ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
-	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
-	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
-	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
+	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
+	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  if ( fs->jets().size() < 7 )
 	    temp_hist_njets->Fill(fs->jets().size());
 	  else
@@ -163,9 +163,9 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 	}
 	if ( third_loose == 2 ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
-	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
-	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
-	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).P().Pt()/1.0e3);
+	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
+	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
+	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  if ( fs->jets().size() < 7 )
 	    temp_hist_njets->Fill(fs->jets().size());
 	  else

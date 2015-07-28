@@ -31,9 +31,9 @@ void FRZ::FinalState::evaluateZcandidates() {
 void FRZ::FinalState::evaluateSelf() {
   m_Ht = 0;
   for ( auto const& lep : m_leptons )
-    m_Ht += lep.P().Pt();
+    m_Ht += lep.pT();
   for ( auto const& jet : m_jets )
-    m_Ht += jet.P().Pt();
+    m_Ht += jet.pT();
 
   if ( m_nZcandidates == 1 ) {
     for ( unsigned int i = 0; i < 3; ++i ) {

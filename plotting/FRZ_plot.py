@@ -7,7 +7,7 @@ import errno
 import plot_utils
 plot_utils.looks_atlas()
 
-usage = 'Usage: FRZ_plot2.py [in-file] [out-folder] [eps OR pdf]'
+usage = 'Usage: FRZ_plot.py [in-file] [out-folder] [eps OR pdf]'
 if len(sys.argv) != 4:
     sys.exit(usage)
 if not os.path.exists(sys.argv[1]):
@@ -48,6 +48,7 @@ for h in hists:
             stacks[h].Add(cur_hist)
         else:
             plot_utils.hist_formatting(cur_hist,'data')
+            cur_hist.GetYaxis().SetTitle('Events/'+str(cur_hist.GetXaxis().GetBinWidth(0)))
         if p == 'zjets':
             cur_hist.SetLineColor(ROOT.kBlack)
             cur_hist.SetLineWidth(2)

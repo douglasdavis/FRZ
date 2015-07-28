@@ -21,7 +21,7 @@ namespace FRZ {
 
   private:
 
-    TLorentzVector m_P;
+    TLorentzVector m_p;
     T              m_obj;
     
   public:
@@ -32,14 +32,14 @@ namespace FRZ {
     T&       obj()       { return m_obj; }
     T const& obj() const { return m_obj; }
     
-    TLorentzVector&       P()       { return m_P; }
-    TLorentzVector const& P() const { return m_P; }
+    TLorentzVector&       p()       { return m_p; }
+    TLorentzVector const& p() const { return m_p; }
     
-    double pT()  const { return m_P.Pt();  }
-    double eta() const { return m_P.Eta(); }
-    double phi() const { return m_P.Phi(); }
-    double E()   const { return m_P.E();   }
-    double m()   const { return m_P.M();   }
+    double pT()  const { return m_p.Pt();  }
+    double eta() const { return m_p.Eta(); }
+    double phi() const { return m_p.Phi(); }
+    double E()   const { return m_p.E();   }
+    double m()   const { return m_p.M();   }
     
   };
 

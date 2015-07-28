@@ -33,7 +33,7 @@ void FRZ::LeptonPair::setLeptons(const FRZ::PhysicsObject<FRZ::Lepton> lep1,
 				 const unsigned int idx2,
 				 const unsigned int idx3)
 {
-  m_mass         = (lep1.P() + lep2.P()).M();
+  m_mass         = (lep1.p() + lep2.p()).M();
   m_lepton1idx   = idx1;
   m_lepton2idx   = idx2;
 

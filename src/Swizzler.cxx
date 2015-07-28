@@ -156,7 +156,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	lep.obj().set_charge(_lep_charge[ilep]);
 	lep.obj().set_z0(_lep_z0[ilep]);
 	lep.obj().set_d0(_lep_trackd0pvunbiased[ilep]);
-	lep.P().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],ELECTRON_MASS*GeV);
+	lep.p().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],ELECTRON_MASS*GeV);
 	lep.obj().set_trackPt(_lep_pt[ilep]);
 	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_ELEC) != GOOD_ELEC || !passIPcuts(_lep_trackd0pvunbiased[ilep],
 										_lep_tracksigd0pvunbiased[ilep],
@@ -164,7 +164,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 										_lep_eta[ilep]));
 	lep.obj().set_trigger( (_lep_inTrigger[ilep] & 1) || (_lep_inTrigger[ilep] & 2) );
 	lep.obj().set_d0cut(_lep_trackd0pvunbiased[ilep] / _lep_tracksigd0pvunbiased[ilep]);
-	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.P().Theta()));
+	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.p().Theta()));
 	if ( !_is_data ) {
 	  lep.obj().set_truthMatched(_lep_truth_matched[ilep]);
 	}
@@ -176,7 +176,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	lep.obj().set_charge(_lep_charge[ilep]);
 	lep.obj().set_z0(_lep_z0[ilep]);
 	lep.obj().set_d0(_lep_trackd0pvunbiased[ilep]);
-	lep.P().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],MUON_MASS*GeV);
+	lep.p().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],MUON_MASS*GeV);
 	lep.obj().set_trackPt(_lep_pt[ilep]);
 	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_MUON) != GOOD_MUON || !passIPcuts(_lep_trackd0pvunbiased[ilep],
 										   _lep_tracksigd0pvunbiased[ilep],
@@ -184,7 +184,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 										   _lep_eta[ilep]));
 	lep.obj().set_trigger( (_lep_inTrigger[ilep] & 1) || (_lep_inTrigger[ilep] & 2) );
 	lep.obj().set_d0cut(_lep_trackd0pvunbiased[ilep] / _lep_tracksigd0pvunbiased[ilep]);
-	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.P().Theta()));
+	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.p().Theta()));
 	if ( !_is_data ) {
 	  lep.obj().set_truthMatched(_lep_truth_matched[ilep]);
 	}
@@ -217,7 +217,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	if ( std::fabs(_jet_eta[ijet]) < 2.5 ) {
 	  if ( std::fabs(_jet_jvf[ijet]) > 0.5 || _jet_pt[ijet] > 50000.0 || std::fabs(_jet_eta[ijet]) > 2.4 ) {
 	    FRZ::PhysicsObject<FRZ::Jet> jet;
-	    jet.P().SetPtEtaPhiM(_jet_pt[ijet],_jet_eta[ijet],_jet_phi[ijet],0.0);
+	    jet.p().SetPtEtaPhiM(_jet_pt[ijet],_jet_eta[ijet],_jet_phi[ijet],0.0);
 	    jet.obj().set_MV1(_jet_flavor_weight_MV1[ijet]);
 	    jet.obj().set_JVF(_jet_jvf[ijet]);
 	    FinalState.jets().push_back(jet);
@@ -228,7 +228,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 
     // set the missing Et
     FRZ::PhysicsObject<FRZ::MET> MET;
-    MET.P().SetPtEtaPhiM(_MET_RefFinal_em_tightpp_et,0.0,_MET_RefFinal_em_tightpp_phi,0.0);
+    MET.p().SetPtEtaPhiM(_MET_RefFinal_em_tightpp_et,0.0,_MET_RefFinal_em_tightpp_phi,0.0);
     MET.obj().set_Et(_MET_RefFinal_em_tightpp_et);
     MET.obj().set_sumEt(_MET_RefFinal_em_tightpp_sumet);
     FinalState.setMET(MET);
