@@ -1,6 +1,5 @@
 #!/usr/bin/env python2
 
-import ROOT
 import sys
 import os
 import errno
@@ -25,11 +24,12 @@ out_folder = sys.argv[2]
 file_ext   = sys.argv[3]
 
 FRZ_BASE = os.environ['FRZ_BASE']
+import ROOT
 ROOT.gSystem.Load(FRZ_BASE+'/lib/libFRZ')
 
 in_file = ROOT.TFile(in_file,'read')
 
-hists     = ['MET','tlpt','tlpts','tlptv','njets']
+hists     = ['MET','HT','tlpt','tlpts','tlptv','njets']
 processes = ['ttbarV','ttbar','diboson','zjets','data']
 colors    = { 'zjets'  : ROOT.kWhite    , 'diboson': ROOT.kAzure+2 ,
               'ttbarV' : ROOT.kOrange+1 , 'ttbar'  : ROOT.kGreen-2 ,
@@ -42,8 +42,8 @@ for h in hists:
     for p in processes:
         cur_hist = in_file.Get(h+'_'+p)
         if not p == 'data':
-            cur_hist.SetFillColor(colors[p])
-            cur_hist.SetLineColor(colors[p])
+            cur_hist.SetFillColorAlpha(colors[p],.7)
+            cur_hist.SetLineColorAlpha(colors[p],.7)
             plot_utils.hist_formatting(cur_hist,'not_data')
             stacks[h].Add(cur_hist)
         else:
@@ -143,6 +143,29 @@ p2_MET.Draw()
 p1_MET.RedrawAxis()
 p2_MET.RedrawAxis()
 c_MET.SaveAs(out_folder+'/plot_MET.'+file_ext)
+
+
+c_HT  = ROOT.TCanvas('c_HT','c_HT', 600,450)
+p1_HT = ROOT.TPad('p1_HT',  'p1_HT',0.0,0.31,0.95,0.95)
+p2_HT = ROOT.TPad('p2_HT',  'p2_HT',0.0,0.00,0.95,0.3)
+p1_HT.cd()
+in_file.Get('HT_data').Draw('e')
+stacks['HT'].Draw('same')
+plot_utils.legend.Draw('same')
+in_file.Get('HT_data').Draw('same,e')
+plot_utils.atlaslabel.DrawLatex(.2,label_height,'ATLAS')
+plot_utils.atlaslabelText.DrawLatex(.2+0.110,label_height,'Work in Progress, #sqrt{s} = 8 TeV, 20.3 fb^{-1}')
+p2_HT.cd()
+plot_utils.hist_ratio_formatting(ratios['HT'])
+ratios['HT'].Draw('e')
+plot_utils.line_at_one.Draw('same')
+plot_utils.pad_margining(p1_HT,p2_HT)
+c_HT.cd()
+p1_HT.Draw()
+p2_HT.Draw()
+p1_HT.RedrawAxis()
+p2_HT.RedrawAxis()
+c_HT.SaveAs(out_folder+'/plot_HT.'+file_ext)
 
 c_njets  = ROOT.TCanvas('c_njets','c_njets', 600,450)
 p1_njets = ROOT.TPad('p1_njets',  'p1_njets',0.0,0.31,0.95,0.95)

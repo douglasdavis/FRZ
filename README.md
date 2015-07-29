@@ -30,4 +30,4 @@ be able to read in C++ and my work around (in order to not use an
 external C++ json library) was to store the info in a C++ class in a 
 ROOT file to hold all of the sample information. It is very simple
 to generate a ROOT file holding this class; after building, run the
-FRZ.py steering python script with the flag --json-to-root
+`FRZ.py` steering python script with the flag `--json-to-root`

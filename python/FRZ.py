@@ -12,7 +12,7 @@ parser.add_argument('-d','--data',        help='flag to tell job if it is data',
 parser.add_argument(     '--pileup',      help='flag to tell job to consider pileup',        required=False,action='store_true')
 parser.add_argument('-i','--in-file',     help='input file name',                            required=False)
 parser.add_argument(     '--make-hists',  help='run the histogram maker',                    required=False,action='store_true')
-parser.add_argument('-p','--third-pdg',   help='third lepton pdg, 11/13 (for e/mu)',         required=False)
+parser.add_argument('-p','--third-pdg',   help='third lepton pdg, 11/13 (for e/mu)',         required=False,type=int,choices=[11,13],default=11)
 parser.add_argument('-o','--out-file',    help='output file for histogram maker',            required=False)
 parser.add_argument(     '--json-to-root',help='convert sample list from json to ROOT',      required=False,action='store_true')
 parser.add_argument(     '--third-loose', help='third lepton loose flag (0 no,1 yes,2 both)',required=False,type=int,choices=[0,1,2],default=2)
@@ -91,4 +91,4 @@ if args_tf.make_hists:
     tl = int(args['third_pdg'])
     hist_maker.setThirdLepOpt(tl)
     if hist_maker.run(of,args['third_loose']) == False:
-        print 'Something bad happened in hist_maker::run'
+        print 'Something bad happened in HistMaker::run, it returned false'
