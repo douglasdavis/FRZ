@@ -210,7 +210,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
     // without wasting anymore time.
     FinalState.evaluateZcandidates();
     if ( FinalState.nZcandidates() != 1 ) continue;
-    
+
     // loop over all jets in the event
     for ( unsigned int ijet = 0; ijet < _nAllJets && ijet < JETSIZE; ++ijet ) {
       if ( _jet_pt[ijet] >= 25000.0 ) {
@@ -235,6 +235,8 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 
     // final stuff before filling event into tree
     FinalState.evaluateSelf();
+    if ( FinalState.leptons().at(FinalState.thirdLeptonIdx()).pT() < 25.0e3 ) continue;
+    
     FRZ_tree->Fill();
 
   } // all events

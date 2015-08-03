@@ -17,7 +17,7 @@ In the top level directory execute the following:
     $ make
 
 Now the environment variable `FRZ_BASE` is defined and can
-be accessed with `$FRZ_BASE`. The library is in the $FRZ_BASE/lib
+be accessed with `$FRZ_BASE`. The library is in the `$FRZ_BASE/lib`
 directory. Added to the `PATH` variable: `$FRZ_BASE/python`,
 and added to the `LD_LIBRARY_PATH` variable: `$FRZ_BASE/lib`
 

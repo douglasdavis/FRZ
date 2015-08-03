@@ -59,7 +59,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			    MET_plot_props.xmin,
 			    MET_plot_props.xmax);
 
-  plot_props HT_plot_props(50,50,300);
+  plot_props HT_plot_props(25,50,400);
   std::string HT_title       = ";H_{T} [GeV];Events/"+std::to_string(HT_plot_props.binsize)+" GeV";
   std::string HT_ratio_title = ";H_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> HT;
@@ -102,7 +102,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   std::string tlptv_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events";
   std::string tlptv_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlptv;
-  double var_bins[4] = {12,30,80,250};
+  double var_bins[4] = {25,40,80,250};
   auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),3,var_bins);
   
   for ( auto const& entry : procs ) {

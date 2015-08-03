@@ -71,17 +71,19 @@ if args_tf.swizzle or args_tf.json_to_root:
             parts_full = split_me.split('/')
             out_file   = split_me[len(split_me)-1]
             out_file   = 'swizzled.data.ML_LOOSEELE_LOOSEMU_3FF.root'
+            out_file   = 'swizzled_files/'+out_file
             a_swizz    = FRZ.Swizzler(True,args['pileup'])
             a_swizz.addFile(args['in_file'])
-            a_swizz.loopToFile('swizzled_files/'+out_file,sample_holder)
+            a_swizz.loopToFile(out_file,sample_holder)
         else:
             split_me   = args['in_file']
             parts_full = split_me.split('mc12_8TeV')
             out_file   = 'swizzled.mc12_8TeV'+parts_full[len(parts_full)-1]
             out_file   = out_file.replace('/','.')
+            out_file   = 'swizzled_files/'+out_file
             a_swizz    = FRZ.Swizzler(False,args['pileup'])
             a_swizz.addFile(args['in_file'])
-            a_swizz.loopToFile('swizzled_files/'+out_file,sample_holder)
+            a_swizz.loopToFile(out_file,sample_holder)
 
 if args_tf.make_hists:
     file_names = os.listdir(FRZ_BASE+'/swizzled_files')
