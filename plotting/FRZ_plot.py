@@ -29,7 +29,7 @@ ROOT.gSystem.Load(FRZ_BASE+'/lib/libFRZ')
 
 in_file = ROOT.TFile(in_file,'read')
 
-hists     = ['MET','HT','tlpt','tlpts','tlptv','njets']
+hists     = ['MET','HT','tlpt','tlpts','tlptv','njets','lpim']
 processes = ['ttbarV','ttbar','diboson','zjets','data']
 colors    = { 'zjets'  : ROOT.kWhite    , 'diboson': ROOT.kAzure+2 ,
               'ttbarV' : ROOT.kOrange+1 , 'ttbar'  : ROOT.kGreen-2 ,
@@ -144,7 +144,6 @@ p1_MET.RedrawAxis()
 p2_MET.RedrawAxis()
 c_MET.SaveAs(out_folder+'/plot_MET.'+file_ext)
 
-
 c_HT  = ROOT.TCanvas('c_HT','c_HT', 600,450)
 p1_HT = ROOT.TPad('p1_HT',  'p1_HT',0.0,0.31,0.95,0.95)
 p2_HT = ROOT.TPad('p2_HT',  'p2_HT',0.0,0.00,0.95,0.3)
@@ -166,6 +165,28 @@ p2_HT.Draw()
 p1_HT.RedrawAxis()
 p2_HT.RedrawAxis()
 c_HT.SaveAs(out_folder+'/plot_HT.'+file_ext)
+
+c_lpim  = ROOT.TCanvas('c_lpim','c_lpim', 600,450)
+p1_lpim = ROOT.TPad('p1_lpim',  'p1_lpim',0.0,0.31,0.95,0.95)
+p2_lpim = ROOT.TPad('p2_lpim',  'p2_lpim',0.0,0.00,0.95,0.3)
+p1_lpim.cd()
+in_file.Get('lpim_data').Draw('e')
+stacks['lpim'].Draw('same')
+plot_utils.legend.Draw('same')
+in_file.Get('lpim_data').Draw('same,e')
+plot_utils.atlaslabel.DrawLatex(.2,label_height,'ATLAS')
+plot_utils.atlaslabelText.DrawLatex(.2+0.110,label_height,'Work in Progress, #sqrt{s} = 8 TeV, 20.3 fb^{-1}')
+p2_lpim.cd()
+plot_utils.hist_ratio_formatting(ratios['lpim'])
+ratios['lpim'].Draw('e')
+plot_utils.line_at_one.Draw('same')
+plot_utils.pad_margining(p1_lpim,p2_lpim)
+c_lpim.cd()
+p1_lpim.Draw()
+p2_lpim.Draw()
+p1_lpim.RedrawAxis()
+p2_lpim.RedrawAxis()
+c_lpim.SaveAs(out_folder+'/plot_lpim.'+file_ext)
 
 c_njets  = ROOT.TCanvas('c_njets','c_njets', 600,450)
 p1_njets = ROOT.TPad('p1_njets',  'p1_njets',0.0,0.31,0.95,0.95)
