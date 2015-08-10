@@ -323,6 +323,8 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   tlpts_ratio->Write();
   tlptv_ratio->Write();
   njets_ratio->Write();
+
+  stack_tlptv->Write();
   
   out_file->Close();      
 

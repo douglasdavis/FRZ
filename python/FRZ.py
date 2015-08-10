@@ -16,6 +16,7 @@ parser.add_argument('-p','--third-pdg',   help='third lepton pdg, 11/13 (for e/m
 parser.add_argument('-o','--out-file',    help='output file for histogram maker',            required=False)
 parser.add_argument(     '--json-to-root',help='convert sample list from json to ROOT',      required=False,action='store_true')
 parser.add_argument(     '--third-loose', help='third lepton loose flag (0 no,1 yes,2 both)',required=False,type=int,choices=[0,1,2],default=2)
+parser.add_argument(     '--three-ratio', help='print ratio for the 3 third lepton pT bins', required=False,action='store_true')
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -94,3 +95,39 @@ if args_tf.make_hists:
     hist_maker.setThirdLepOpt(tl)
     if hist_maker.run(of,args['third_loose']) == False:
         print 'Something bad happened in HistMaker::run, it returned false'
+
+if args_tf.three_ratio:
+    in_file    = ROOT.TFile(args['in_file'])
+    ratio      = in_file.Get('tlptv_ratio')
+    data       = in_file.Get('tlptv_data')
+    stack_last = in_file.Get('stack_tlptv').GetStack().Last()
+    bin_left   = [ratio.GetXaxis().GetBinLowEdge(i+1) for i in xrange(3)]
+    bin_right  = [ratio.GetXaxis().GetBinUpEdge(i+1)  for i in xrange(3)]
+    bin_widths = [y-x for x,y in zip(bin_left,bin_right)]
+    bin_mc     = [data.GetBinContent(i+1)/ratio.GetBinContent(i+1) for i in xrange(3)]
+    bin_data   = [data.GetBinContent(i+1) for i in xrange(3)]
+    bin_mc_err = [stack_last.GetBinError(i+1) for i in xrange(3)]
+    bin_data_e = [data.GetBinError(i+1) for i in xrange(3)]
+    bin_cont   = [ratio.GetBinContent(i+1) for i in xrange(3)]
+    bin_err    = [ratio.GetBinError(i+1) for i in xrange(3)]
+        
+    print '\\begin{table}'
+    print '\\caption{Trilepton events with a $Z\\rightarrow\\ell^+\\ell^-$ candidate. Third lepton (the lepton not in the pair forming the $Z$ candidate)',
+    print '$p_T$ ranges corresponding to $\\sqrt{s}~=~8$~TeV and $\\int\\mathcal{L}\\,dt~=~20.3~\\text{ fb}^{-1}$.}'
+    print '\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l | c | c | c | c }'
+    print '\\hline\hline'
+    print '& $p_T$ range (GeV) & $N_{\\text{events}}$ Data & $N_{\\text{events}}$ MC & Ratio \\\ '
+    print '\\hline'
+
+    print ' Bin 1 &\t',bin_left[0],'--',bin_right[0],'\t&\t', round(bin_data[0],2),'$\\pm$',round(bin_data_e[0],2),'\t&\t',
+    print round(bin_mc[0],2),'$\\pm$',round(bin_mc_err[0]),'\t& $',round(bin_cont[0],2),'\pm',round(bin_err[0],2),'$\t \\\ '
+
+    print ' Bin 2 &\t',bin_left[1],'--',bin_right[1],'\t&\t', round(bin_data[1],2),'$\\pm$',round(bin_data_e[1],2),'\t&\t',
+    print round(bin_mc[1],2),'$\\pm$',round(bin_mc_err[1]),'\t& $',round(bin_cont[1],2),'\pm',round(bin_err[1],2),'$\t \\\ '
+
+    print ' Bin 3 &\t',bin_left[2],'--',bin_right[2],'\t&\t', round(bin_data[2],2),'$\\pm$',round(bin_data_e[2],2),'\t&\t',
+    print round(bin_mc[2],2),'$\\pm$',round(bin_mc_err[2]),'\t& $',round(bin_cont[2],2),'\pm',round(bin_err[2],2),'$\t \\\ '
+
+    print '\\hline\hline'
+    print '\\end{tabular*}'
+    print '\\end{table}'
