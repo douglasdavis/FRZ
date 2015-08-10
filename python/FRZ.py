@@ -119,14 +119,14 @@ if args_tf.three_ratio:
     print '& $p_T$ range (GeV) & $N_{\\text{events}}$ Data & $N_{\\text{events}}$ MC & Ratio \\\ '
     print '\\hline'
 
-    print ' Bin 1 &\t',bin_left[0],'--',bin_right[0],'\t&\t', round(bin_data[0],2),'$\\pm$',round(bin_data_e[0],2),'\t&\t',
-    print round(bin_mc[0],2),'$\\pm$',round(bin_mc_err[0]),'\t& $',round(bin_cont[0],2),'\pm',round(bin_err[0],2),'$\t \\\ '
+    print ' Bin 1 &\t',bin_left[0],'--',bin_right[0],'\t& $', round(bin_data[0],2),'\\pm',round(bin_data_e[0],2),'$ \t& $',
+    print round(bin_mc[0],2),'\\pm',round(bin_mc_err[0]),'$ \t& $',round(bin_cont[0],2),'\\pm',round(bin_err[0],2),'$\t \\\ '
 
-    print ' Bin 2 &\t',bin_left[1],'--',bin_right[1],'\t&\t', round(bin_data[1],2),'$\\pm$',round(bin_data_e[1],2),'\t&\t',
-    print round(bin_mc[1],2),'$\\pm$',round(bin_mc_err[1]),'\t& $',round(bin_cont[1],2),'\pm',round(bin_err[1],2),'$\t \\\ '
+    print ' Bin 2 &\t',bin_left[1],'--',bin_right[1],'\t& $', round(bin_data[1],2),'\\pm',round(bin_data_e[1],2),'$ \t& $',
+    print round(bin_mc[1],2),'\\pm',round(bin_mc_err[1]),'$ \t& $',round(bin_cont[1],2),'\\pm',round(bin_err[1],2),'$\t \\\ '
 
-    print ' Bin 3 &\t',bin_left[2],'--',bin_right[2],'\t&\t', round(bin_data[2],2),'$\\pm$',round(bin_data_e[2],2),'\t&\t',
-    print round(bin_mc[2],2),'$\\pm$',round(bin_mc_err[2]),'\t& $',round(bin_cont[2],2),'\pm',round(bin_err[2],2),'$\t \\\ '
+    print ' Bin 3 &\t',bin_left[2],'--',bin_right[2],'\t& $', round(bin_data[2],2),'\\pm',round(bin_data_e[2],2),'$ \t& $',
+    print round(bin_mc[2],2),'\\pm',round(bin_mc_err[2]),'$ \t& $',round(bin_cont[2],2),'\\pm',round(bin_err[2],2),'$\t \\\ '
 
     print '\\hline\hline'
     print '\\end{tabular*}'
