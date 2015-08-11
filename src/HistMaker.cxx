@@ -6,6 +6,8 @@
 
 // C++
 #include <array>
+#include <cstdlib>
+#include <fstream>
 
 // ROOT
 #include "TFile.h"
@@ -59,7 +61,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			    MET_plot_props.xmin,
 			    MET_plot_props.xmax);
 
-  plot_props HT_plot_props(25,50,400);
+  plot_props HT_plot_props(25,50,450);
   std::string HT_title       = ";H_{T} [GeV];Events/"+std::to_string(HT_plot_props.binsize)+" GeV";
   std::string HT_ratio_title = ";H_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> HT;
@@ -108,10 +110,20 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			     tlpt_plot_props.xmin,
 			     tlpt_plot_props.xmax);
 
+  std::string FRZ_BASE = std::getenv("FRZ_BASE");
+  std::string bin_lim_file_name = FRZ_BASE+"/config/bin_limits";
+  std::ifstream bin_lim_file;
+  bin_lim_file.open(bin_lim_file_name.c_str());
+  std::vector<double> bin_lims;
+  double cur_lim;
+  while ( bin_lim_file >> cur_lim ) bin_lims.push_back(cur_lim);
+  bin_lim_file.close();
+  
   std::string tlptv_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events";
   std::string tlptv_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlptv;
-  double var_bins[4] = {25,40,80,250};
+  double var_bins[4];
+  for ( int i = 0; i < 4; ++ i ) var_bins[i] = bin_lims.at(i);
   auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),3,var_bins);
   
   for ( auto const& entry : procs ) {

@@ -17,6 +17,7 @@ parser.add_argument('-o','--out-file',    help='output file for histogram maker'
 parser.add_argument(     '--json-to-root',help='convert sample list from json to ROOT',      required=False,action='store_true')
 parser.add_argument(     '--third-loose', help='third lepton loose flag (0 no,1 yes,2 both)',required=False,type=int,choices=[0,1,2],default=2)
 parser.add_argument(     '--three-ratio', help='print ratio for the 3 third lepton pT bins', required=False,action='store_true')
+parser.add_argument(     '--gen-plots',   help='executes plotting script with 3 given args', required=False,type=str)
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -90,9 +91,9 @@ if args_tf.make_hists:
     file_names = os.listdir(FRZ_BASE+'/swizzled_files')
     hist_maker = FRZ.HistMaker()
     for f in file_names: hist_maker.addFileName(FRZ_BASE+'/swizzled_files/'+f)
-    of = args['out_file']
     tl = int(args['third_pdg'])
     hist_maker.setThirdLepOpt(tl)
+    of = 'hists.pdg_'+str(tl)+'.looseopt_'+str(args['third_loose'])+'.root'
     if hist_maker.run(of,args['third_loose']) == False:
         print 'Something bad happened in HistMaker::run, it returned false'
 
@@ -131,3 +132,8 @@ if args_tf.three_ratio:
     print '\\hline\hline'
     print '\\end{tabular*}'
     print '\\end{table}'
+
+if args_tf.gen_plots:
+    arg = args['gen_plots']+'.plots'
+    com = 'FRZ_plot.py '+args['gen_plots']+' '+arg+' pdf'
+    os.system(com)
