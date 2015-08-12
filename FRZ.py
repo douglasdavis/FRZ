@@ -16,8 +16,8 @@ parser.add_argument('-p','--third-pdg',   help='third lepton pdg, 11/13 (for e/m
 parser.add_argument('-o','--out-file',    help='output file for histogram maker',            required=False)
 parser.add_argument(     '--json-to-root',help='convert sample list from json to ROOT',      required=False,action='store_true')
 parser.add_argument(     '--third-loose', help='third lepton loose flag (0 no,1 yes,2 both)',required=False,type=int,choices=[0,1,2],default=2)
-parser.add_argument(     '--three-ratio', help='print ratio for the 3 third lepton pT bins', required=False,action='store_true')
-parser.add_argument(     '--gen-plots',   help='executes plotting script with 3 given args', required=False,type=str)
+parser.add_argument(     '--three-ratio', help='print ratio for the 3 third lepton pT bins', required=False,type=str)
+parser.add_argument(     '--gen-plots',   help='executes plotting script on hist file',      required=False,type=str)
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -98,7 +98,7 @@ if args_tf.make_hists:
         print 'Something bad happened in HistMaker::run, it returned false'
 
 if args_tf.three_ratio:
-    in_file    = ROOT.TFile(args['in_file'])
+    in_file    = ROOT.TFile(args['three_ratio'])
     ratio      = in_file.Get('tlptv_ratio')
     data       = in_file.Get('tlptv_data')
     stack_last = in_file.Get('stack_tlptv').GetStack().Last()

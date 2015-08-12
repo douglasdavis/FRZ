@@ -52,4 +52,21 @@ void FRZ::FinalState::evaluateSelf() {
        m_leptons.at(m_leptonPairs.at(m_ZcandidateIdx).obj().lepton2idx()).obj().isLoose() ) m_pairLoose = true;
   if ( m_thirdLoose && m_pairLoose ) m_allLoose = true;  
 
+  double current_dR = 2000.0;
+  double min_dR     = 1000.0;
+  for ( auto& lep : m_leptons ) {
+    min_dR = 1000.0;
+    if ( m_jets.empty() )
+      lep.obj().set_dR_closestJet(-1.0);
+    else {
+      for ( auto const& jet : m_jets ) {
+	current_dR = lep.p().DeltaR(jet.p());
+	if ( current_dR < min_dR )
+	  min_dR = current_dR;
+      }
+      lep.obj().set_dR_closestJet(min_dR);
+    }
+    lep.obj().set_dphi_MET(lep.p().DeltaPhi(m_MET.p()));
+  }
+      
 }

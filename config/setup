@@ -1,3 +1,3 @@
 export FRZ_BASE=$PWD
-export PATH=$PATH:$FRZ_BASE/python:$FRZ_BASE/plotting
+export PATH=$PATH:$FRZ_BASE:$FRZ_BASE/plotting
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FRZ_BASE/lib

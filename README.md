@@ -18,9 +18,16 @@ In the top level directory execute the following:
 
 Now the environment variable `FRZ_BASE` is defined and can
 be accessed with `$FRZ_BASE`. The library is in the `$FRZ_BASE/lib`
-directory. Added to the `PATH` variable: `$FRZ_BASE/python`,
+directory. Added to the `PATH` variable: `$FRZ_BASE`, `$FRZ_BASE/plotting`
 and added to the `LD_LIBRARY_PATH` variable: `$FRZ_BASE/lib`
 
+Instructions for running
+------------
+Executing
+
+    $ FRZ.py --help
+
+will list the options for the `FRZ.py` steering script.
 
 Instructions for generating MC sample ROOT file
 ------------
