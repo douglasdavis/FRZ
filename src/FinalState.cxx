@@ -26,14 +26,6 @@ void FRZ::FinalState::evaluateZcandidates() {
   for ( auto const& lp : m_leptonPairs )
     if ( lp.obj().Zcandidate() )
       ++m_nZcandidates;
-}
-
-void FRZ::FinalState::evaluateSelf() {
-  m_Ht = 0;
-  for ( auto const& lep : m_leptons )
-    m_Ht += lep.pT();
-  for ( auto const& jet : m_jets )
-    m_Ht += jet.pT();
 
   if ( m_nZcandidates == 1 ) {
     for ( unsigned int i = 0; i < 3; ++i ) {
@@ -44,6 +36,14 @@ void FRZ::FinalState::evaluateSelf() {
       }
     }
   }
+}
+
+void FRZ::FinalState::evaluateSelf() {
+  m_Ht = 0;
+  for ( auto const& lep : m_leptons )
+    m_Ht += lep.pT();
+  for ( auto const& jet : m_jets )
+    m_Ht += jet.pT();
 
   m_thirdLoose = false; m_pairLoose = false; m_allLoose = false;
   

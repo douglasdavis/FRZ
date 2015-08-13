@@ -1,5 +1,5 @@
 /** @file Jet.cxx
- *  @brief FLEP::Jet class implementation
+ *  @brief FRZ::Jet class implementation
  *
  *  @author Douglas Davis < ddavis@phy.duke.edu >
  */

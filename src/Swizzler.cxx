@@ -159,9 +159,9 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	lep.p().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],ELECTRON_MASS*GeV);
 	lep.obj().set_trackPt(_lep_pt[ilep]);
 	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_ELEC) != GOOD_ELEC || !passIPcuts(_lep_trackd0pvunbiased[ilep],
-										_lep_tracksigd0pvunbiased[ilep],
-										_lep_z0[ilep],
-										_lep_eta[ilep]));
+											 _lep_tracksigd0pvunbiased[ilep],
+											 _lep_z0[ilep],
+											 _lep_eta[ilep]));
 	lep.obj().set_trigger( (_lep_inTrigger[ilep] & 1) || (_lep_inTrigger[ilep] & 2) );
 	lep.obj().set_d0cut(_lep_trackd0pvunbiased[ilep] / _lep_tracksigd0pvunbiased[ilep]);
 	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.p().Theta()));
@@ -179,9 +179,9 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	lep.p().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],MUON_MASS*GeV);
 	lep.obj().set_trackPt(_lep_pt[ilep]);
 	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_MUON) != GOOD_MUON || !passIPcuts(_lep_trackd0pvunbiased[ilep],
-										   _lep_tracksigd0pvunbiased[ilep],
-										   _lep_z0[ilep],
-										   _lep_eta[ilep]));
+											 _lep_tracksigd0pvunbiased[ilep],
+											 _lep_z0[ilep],
+											 _lep_eta[ilep]));
 	lep.obj().set_trigger( (_lep_inTrigger[ilep] & 1) || (_lep_inTrigger[ilep] & 2) );
 	lep.obj().set_d0cut(_lep_trackd0pvunbiased[ilep] / _lep_tracksigd0pvunbiased[ilep]);
 	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.p().Theta()));
@@ -210,6 +210,7 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
     // without wasting anymore time.
     FinalState.evaluateZcandidates();
     if ( FinalState.nZcandidates() != 1 ) continue;
+    if ( FinalState.leptons().at(FinalState.thirdLeptonIdx()).pT() < 25.0e3 ) continue;
 
     // loop over all jets in the event
     for ( unsigned int ijet = 0; ijet < _nAllJets && ijet < JETSIZE; ++ijet ) {
@@ -235,7 +236,6 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 
     // final stuff before filling event into tree
     FinalState.evaluateSelf();
-    if ( FinalState.leptons().at(FinalState.thirdLeptonIdx()).pT() < 25.0e3 ) continue;
     
     FRZ_tree->Fill();
 
