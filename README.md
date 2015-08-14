@@ -48,7 +48,10 @@ To generate nice looking plots from these histograms we use `--gen-plots`:
 There is an optional flag `--mpl` to generate the plots using matplotlib
 instead of ROOT. To extract the ratios for third lepton pT bins:
 
-    $ FRZ.py --third-ratio [histogram file name]
+    $ FRZ.py --third-ratios [histogram file name]
+
+this prints a table in LaTeX format showing useful information about those
+pT bins. To see all options just use the `--help` flag.
 
 Instructions for generating MC sample ROOT file
 ------------
