@@ -18,6 +18,7 @@ parser.add_argument(     '--json-to-root',help='convert sample list from json to
 parser.add_argument(     '--third-loose', help='third lepton loose flag (0 no,1 yes,2 both)',required=False,type=int,choices=[0,1,2],default=2)
 parser.add_argument(     '--three-ratio', help='print ratio for the 3 third lepton pT bins', required=False,type=str)
 parser.add_argument(     '--gen-plots',   help='executes plotting script on hist file',      required=False,type=str)
+parser.add_argument(     '--mpl',         help='generate plots with matplotlib',             required=False,action='store_true')
 
 args    = vars(parser.parse_args())
 args_tf = parser.parse_args()
@@ -102,15 +103,16 @@ if args_tf.three_ratio:
     ratio      = in_file.Get('tlptv_ratio')
     data       = in_file.Get('tlptv_data')
     stack_last = in_file.Get('stack_tlptv').GetStack().Last()
-    bin_left   = [ratio.GetXaxis().GetBinLowEdge(i+1) for i in xrange(3)]
-    bin_right  = [ratio.GetXaxis().GetBinUpEdge(i+1)  for i in xrange(3)]
+    nbins      = data.GetNbinsX()
+    bin_left   = [ratio.GetXaxis().GetBinLowEdge(i+1) for i in xrange(nbins)]
+    bin_right  = [ratio.GetXaxis().GetBinUpEdge(i+1)  for i in xrange(nbins)]
     bin_widths = [y-x for x,y in zip(bin_left,bin_right)]
-    bin_mc     = [data.GetBinContent(i+1)/ratio.GetBinContent(i+1) for i in xrange(3)]
-    bin_data   = [data.GetBinContent(i+1) for i in xrange(3)]
-    bin_mc_err = [stack_last.GetBinError(i+1) for i in xrange(3)]
-    bin_data_e = [data.GetBinError(i+1) for i in xrange(3)]
-    bin_cont   = [ratio.GetBinContent(i+1) for i in xrange(3)]
-    bin_err    = [ratio.GetBinError(i+1) for i in xrange(3)]
+    bin_mc     = [data.GetBinContent(i+1)/ratio.GetBinContent(i+1) for i in xrange(nbins)]
+    bin_data   = [data.GetBinContent(i+1) for i in xrange(nbins)]
+    bin_mc_err = [stack_last.GetBinError(i+1) for i in xrange(nbins)]
+    bin_data_e = [data.GetBinError(i+1) for i in xrange(nbins)]
+    bin_cont   = [ratio.GetBinContent(i+1) for i in xrange(nbins)]
+    bin_err    = [ratio.GetBinError(i+1) for i in xrange(nbins)]
         
     print '\\begin{table}'
     print '\\caption{Trilepton events with a $Z\\rightarrow\\ell^+\\ell^-$ candidate. Third lepton (the lepton not in the pair forming the $Z$ candidate)',
@@ -120,20 +122,20 @@ if args_tf.three_ratio:
     print '& $p_T$ range (GeV) & $N_{\\text{events}}$ Data & $N_{\\text{events}}$ MC & Ratio \\\ '
     print '\\hline'
 
-    print ' Bin 1 &\t',bin_left[0],'--',bin_right[0],'\t& $', round(bin_data[0],2),'\\pm',round(bin_data_e[0],2),'$ \t& $',
-    print round(bin_mc[0],2),'\\pm',round(bin_mc_err[0]),'$ \t& $',round(bin_cont[0],2),'\\pm',round(bin_err[0],2),'$\t \\\ '
-
-    print ' Bin 2 &\t',bin_left[1],'--',bin_right[1],'\t& $', round(bin_data[1],2),'\\pm',round(bin_data_e[1],2),'$ \t& $',
-    print round(bin_mc[1],2),'\\pm',round(bin_mc_err[1]),'$ \t& $',round(bin_cont[1],2),'\\pm',round(bin_err[1],2),'$\t \\\ '
-
-    print ' Bin 3 &\t',bin_left[2],'--',bin_right[2],'\t& $', round(bin_data[2],2),'\\pm',round(bin_data_e[2],2),'$ \t& $',
-    print round(bin_mc[2],2),'\\pm',round(bin_mc_err[2]),'$ \t& $',round(bin_cont[2],2),'\\pm',round(bin_err[2],2),'$\t \\\ '
-
+    for i in xrange(nbins):
+        print ' Bin '+str(i+1)+' &\t',bin_left[i],'--',bin_right[i],'\t& $', round(bin_data[i],2),'\\pm',round(bin_data_e[i],2),'$ \t& $',
+        print round(bin_mc[i],2),'\\pm',round(bin_mc_err[i]),'$ \t& $',round(bin_cont[i],2),'\\pm',round(bin_err[i],2),'$\t \\\ '
+    
     print '\\hline\hline'
     print '\\end{tabular*}'
     print '\\end{table}'
 
 if args_tf.gen_plots:
-    arg = args['gen_plots']+'.plots'
-    com = 'FRZ_plot.py '+args['gen_plots']+' '+arg+' pdf'
-    os.system(com)
+    if args_tf.mpl:
+        com = 'FRZ_plot_mpl.py '+args['gen_plots']
+        os.system('mkdir -p '+str(args['gen_plots'])+'.plots.mpl')
+        os.system(com)
+    else:
+        arg = args['gen_plots']+'.plots'
+        com = 'FRZ_plot.py '+args['gen_plots']+' '+arg+' pdf'
+        os.system(com)

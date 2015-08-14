@@ -29,7 +29,7 @@ ROOT.gSystem.Load(FRZ_BASE+'/lib/libFRZ')
 
 in_file = ROOT.TFile(in_file,'read')
 
-hists     = ['MET','HT','tlpt','tlpts','tlptv','njets','lpim']
+hists     = ['MET','HT','tlpt','tlptv','njets','lpim']
 processes = ['ttbarV','ttbar','diboson','zjets','data']
 colors    = { 'zjets'  : ROOT.kWhite    , 'diboson': ROOT.kAzure+2 ,
               'ttbarV' : ROOT.kOrange+1 , 'ttbar'  : ROOT.kGreen-2 ,
@@ -77,28 +77,6 @@ p2_tlptv.Draw()
 p1_tlptv.RedrawAxis()
 p2_tlptv.RedrawAxis()
 c_tlptv.SaveAs(out_folder+'/plot_tlptv.'+file_ext)
-
-c_tlpts  = ROOT.TCanvas('c_tlpts','c_tlpts', 600,450)
-p1_tlpts = ROOT.TPad('p1_tlpts',  'p1_tlpts',0.0,0.31,0.95,0.95)
-p2_tlpts = ROOT.TPad('p2_tlpts',  'p2_tlpts',0.0,0.00,0.95,0.3)
-p1_tlpts.cd()
-in_file.Get('tlpts_data').Draw('e')
-stacks['tlpts'].Draw('same')
-plot_utils.legend.Draw('same')
-in_file.Get('tlpts_data').Draw('same,e')
-plot_utils.atlaslabel.DrawLatex(.2,label_height,'ATLAS')
-plot_utils.atlaslabelText.DrawLatex(.2+0.110,label_height,'Work in Progress, #sqrt{s} = 8 TeV, 20.3 fb^{-1}')
-p2_tlpts.cd()
-plot_utils.hist_ratio_formatting(ratios['tlpts'])
-ratios['tlpts'].Draw('e')
-plot_utils.line_at_one.Draw('same')
-plot_utils.pad_margining(p1_tlpts,p2_tlpts)
-c_tlpts.cd()
-p1_tlpts.Draw()
-p2_tlpts.Draw()
-p1_tlpts.RedrawAxis()
-p2_tlpts.RedrawAxis()
-c_tlpts.SaveAs(out_folder+'/plot_tlpts.'+file_ext)
 
 c_tlpt  = ROOT.TCanvas('c_tlpt','c_tlpt', 600,450)
 p1_tlpt = ROOT.TPad('p1_tlpt',  'p1_tlpt',0.0,0.31,0.95,0.95)

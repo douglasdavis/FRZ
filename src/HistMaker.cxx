@@ -92,15 +92,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
     njets_ratio->GetXaxis()->SetBinLabel(i,std::to_string(i).c_str());
   njets_ratio->GetXaxis()->SetBinLabel(7,"#geq 7");
   
-  plot_props tlpts_plot_props(3,12,230);
-  std::string tlpts_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string(tlpts_plot_props.binsize)+" GeV";
-  std::string tlpts_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
-  std::map<std::string,TH1D*> tlpts;
-  auto tlpts_ratio = new TH1D("tlpts_ratio",tlpts_ratio_title.c_str(),
-			      tlpts_plot_props.nbins,
-			      tlpts_plot_props.xmin,
-			      tlpts_plot_props.xmax);
-
   plot_props tlpt_plot_props(20,12,120);
   std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string(tlpt_plot_props.binsize)+" GeV";
   std::string tlpt_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
@@ -122,9 +113,9 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   std::string tlptv_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events";
   std::string tlptv_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlptv;
-  double var_bins[4];
-  for ( int i = 0; i < 4; ++ i ) var_bins[i] = bin_lims.at(i);
-  auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),3,var_bins);
+  double var_bins[5];
+  for ( int i = 0; i < 5; ++ i ) var_bins[i] = bin_lims.at(i);
+  auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),4,var_bins);
   
   for ( auto const& entry : procs ) {
     MET[entry] = new TH1D(("MET_"+entry).c_str(),MET_title.c_str(),
@@ -142,10 +133,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
     tlpt[entry] = new TH1D(("tlpt_"+entry).c_str(),tlpt_title.c_str(),
 			   tlpt_plot_props.nbins,tlpt_plot_props.xmin,tlpt_plot_props.xmax);
 
-    tlpts[entry] = new TH1D(("tlpts_"+entry).c_str(),tlpts_title.c_str(),
-			    tlpts_plot_props.nbins,tlpts_plot_props.xmin,tlpts_plot_props.xmax);
-
-    tlptv[entry] = new TH1D(("tlptv_"+entry).c_str(),tlptv_title.c_str(),3,var_bins);
+    tlptv[entry] = new TH1D(("tlptv_"+entry).c_str(),tlptv_title.c_str(),4,var_bins);
   }
 
   // loop over all trees, make temporary histograms,
@@ -176,12 +164,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 				   tlpt_plot_props.xmin,
 				   tlpt_plot_props.xmax);
 
-    auto temp_hist_tlpts = new TH1D("temp_hist_tlpts","nothing",
-				    tlpts_plot_props.nbins,
-				    tlpts_plot_props.xmin,
-				    tlpts_plot_props.xmax);
-
-    auto temp_hist_tlptv = new TH1D("temp_hist_tlptv","nothing",3,var_bins);
+    auto temp_hist_tlptv = new TH1D("temp_hist_tlptv","nothing",4,var_bins);
     
     FRZ::FinalState *fs     = 0;
     FRZ::Sample     *samp   = 0;
@@ -200,7 +183,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 	if ( ( third_loose == 0 || third_loose == 1 ) && third_loose_b == fs->thirdLoose() ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
 	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
-	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  temp_hist_HT->Fill(fs->Ht()/1.0e3);
 	  temp_hist_lpim->Fill(fs->leptonPairs().at(z_cand_idx).obj().mass()/1.0e3);
@@ -212,7 +194,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 	if ( third_loose == 2 ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
 	  temp_hist_tlpt->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
-	  temp_hist_tlpts->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  temp_hist_HT->Fill(fs->Ht()/1.0e3);
 	  temp_hist_lpim->Fill(fs->leptonPairs().at(z_cand_idx).obj().mass()/1.0e3);
@@ -228,7 +209,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
     temp_hist_HT->Scale(weight);
     temp_hist_lpim->Scale(weight);
     temp_hist_tlpt->Scale(weight);
-    temp_hist_tlpts->Scale(weight);
     temp_hist_tlptv->Scale(weight);
     temp_hist_njets->Scale(weight);
     
@@ -237,7 +217,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       HT.at("zjets")->Add(temp_hist_HT);
       lpim.at("zjets")->Add(temp_hist_lpim);
       tlpt.at("zjets")->Add(temp_hist_tlpt);
-      tlpts.at("zjets")->Add(temp_hist_tlpts);
       tlptv.at("zjets")->Add(temp_hist_tlptv);
       njets.at("zjets")->Add(temp_hist_njets);
     }
@@ -246,7 +225,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       HT.at("diboson")->Add(temp_hist_HT);
       lpim.at("diboson")->Add(temp_hist_lpim);
       tlpt.at("diboson")->Add(temp_hist_tlpt);
-      tlpts.at("diboson")->Add(temp_hist_tlpts);
       tlptv.at("diboson")->Add(temp_hist_tlptv);
       njets.at("diboson")->Add(temp_hist_njets);
     }
@@ -255,7 +233,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       HT.at("ttbarV")->Add(temp_hist_HT);
       lpim.at("ttbarV")->Add(temp_hist_lpim);
       tlpt.at("ttbarV")->Add(temp_hist_tlpt);
-      tlpts.at("ttbarV")->Add(temp_hist_tlpts);
       tlptv.at("ttbarV")->Add(temp_hist_tlptv);
       njets.at("ttbarV")->Add(temp_hist_njets);
     }
@@ -264,7 +241,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       HT.at("data")->Add(temp_hist_HT);
       lpim.at("data")->Add(temp_hist_lpim);
       tlpt.at("data")->Add(temp_hist_tlpt);
-      tlpts.at("data")->Add(temp_hist_tlpts);
       tlptv.at("data")->Add(temp_hist_tlptv);
       njets.at("data")->Add(temp_hist_njets);
     }
@@ -273,7 +249,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       HT.at(ptype)->Add(temp_hist_HT);
       lpim.at(ptype)->Add(temp_hist_lpim);
       tlpt.at(ptype)->Add(temp_hist_tlpt);
-      tlpts.at(ptype)->Add(temp_hist_tlpts);
       tlptv.at(ptype)->Add(temp_hist_tlptv);
       njets.at(ptype)->Add(temp_hist_njets);
     }
@@ -282,7 +257,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
     delete temp_hist_HT;
     delete temp_hist_lpim;
     delete temp_hist_tlpt;
-    delete temp_hist_tlpts;
     delete temp_hist_tlptv;
     delete temp_hist_njets;
     
@@ -306,10 +280,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   stacker(tlpt,stack_tlpt);
   makeRatio(tlpt_ratio,(TH1D*)stack_tlpt->GetStack()->Last(),tlpt.at("data"));
 
-  auto stack_tlpts = new THStack("stack_tlpts",tlpts_title.c_str());
-  stacker(tlpts,stack_tlpts);
-  makeRatio(tlpts_ratio,(TH1D*)stack_tlpts->GetStack()->Last(),tlpts.at("data"));
-
   auto stack_tlptv = new THStack("stack_tlptv",tlptv_title.c_str());
   stacker(tlptv,stack_tlptv);
   makeRatio(tlptv_ratio,(TH1D*)stack_tlptv->GetStack()->Last(),tlptv.at("data"));
@@ -324,7 +294,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
     HT.at(k)->Write();
     lpim.at(k)->Write();
     tlpt.at(k)->Write();
-    tlpts.at(k)->Write();
     tlptv.at(k)->Write();
     njets.at(k)->Write();
   }
@@ -332,7 +301,6 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   HT_ratio->Write();
   lpim_ratio->Write();
   tlpt_ratio->Write();
-  tlpts_ratio->Write();
   tlptv_ratio->Write();
   njets_ratio->Write();
 
