@@ -98,8 +98,8 @@ if args_tf.make_hists:
     if hist_maker.run(of,args['third_loose']) == False:
         print 'Something bad happened in HistMaker::run, it returned false'
 
-if args_tf.three_ratio:
-    in_file    = ROOT.TFile(args['three_ratio'])
+if args_tf.third_ratios:
+    in_file    = ROOT.TFile(args['third_ratios'])
     ratio      = in_file.Get('tlptv_ratio')
     data       = in_file.Get('tlptv_data')
     stack_last = in_file.Get('stack_tlptv').GetStack().Last()
