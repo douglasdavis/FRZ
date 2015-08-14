@@ -21,13 +21,34 @@ be accessed with `$FRZ_BASE`. The library is in the `$FRZ_BASE/lib`
 directory. Added to the `PATH` variable: `$FRZ_BASE`, `$FRZ_BASE/plotting`
 and added to the `LD_LIBRARY_PATH` variable: `$FRZ_BASE/lib`
 
-Instructions for running
+What is going on here?
 ------------
-Executing
+The goal of this project is to determine the probability that a
+jet of a certain pT will be reconstructed as a lepton. The `FRZ`
+framework works in a number of steps. First, a top group mini ntuple
+must be "swizzled." This generates a ROOT file containing only events
+that we want to deal with, in a nice EDM format. A sample swizzling:
 
-    $ FRZ.py --help
+    $ FRZ.py --swizzle --pileup --in-file [infile] 
 
-will list the options for the `FRZ.py` steering script.
+Second, a group of "swizzled" files must be put in a directory
+called `swizzled_files` inside the `FRZ_BASE` directory. Then
+we can generate histograms out of those files. The `HistMaker` class
+sorts the events that it reads from the `$FRZ_BASE/swizzled_files`
+directory into the proper process type histograms. A sample
+histogram generation step:
+
+    $ FRZ.py --make-hists --third-pdg 11 --third-loose 1
+
+Now we have a `.root` file in our directory containing histograms.
+To generate nice looking plots from these histograms we use `--gen-plots`:
+
+    $ FRZ.py --gen-plots [histogram file name]
+
+There is an optional flag `--mpl` to generate the plots using matplotlib
+instead of ROOT. To extract the ratios for third lepton pT bins:
+
+    $ FRZ.py --third-ratio [histogram file name]
 
 Instructions for generating MC sample ROOT file
 ------------
