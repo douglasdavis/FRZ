@@ -50,7 +50,8 @@ def make_it(*args,**kwargs):
     curh_MC_vals    = [curh_vals['ttbarV'],curh_vals['ttbar'],curh_vals['diboson'],curh_vals['zjets']]
     curh_MC_weights = [curh_weights['ttbarV'],curh_weights['ttbar'],curh_weights['diboson'],curh_weights['zjets']]
     labels          = [r'$t\bar{t}V$',r'$t\bar{t}$',r'$WW/WZ$',r'$Z$+jets']
-
+    types           = 'stepfilled' #['stepfilled','stepfilled','stepfilled','step']
+    alphas          = .75 #[.5,.5,.5,1]
 
     fig = plt.figure()
     gs  = gsc.GridSpec(2,1,height_ratios=[3,1])
@@ -61,28 +62,27 @@ def make_it(*args,**kwargs):
 
     ax0.errorbar(curh_vals['data'],
                  curh_weights['data'],
-                 fmt='ko',label=r'Data, $\sqrt{s} = 8 \mathrm{\,TeV},\,20.3 \mathrm{\,fb}^{-1}$',
+                 fmt='ko',label=r'Data',
                  yerr=curh_vals_e['data'],
                  xerr=curh_hists['data'].GetBinWidth(0)*.5)
     ax0.hist(curh_MC_vals,
              bins=curh_bins['data'],
              weights=curh_MC_weights,
              label=labels,stacked=True,
-             histtype='stepfilled',alpha=.5,
+             histtype=types,alpha=alphas,
              color=['orange','green','blue','white'],
              linewidth=1.5)
 
+    real_x_min = curh_hists['data'].GetXaxis().GetBinUpEdge(0)
+    real_x_max = curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())
+    
     ax1.set_xlabel(xtitle)
     if 'ytitle' in kwargs:
         ax0.set_ylabel(kwargs.get('ytitle'))
     else:
         ax0.set_ylabel(r'Events/'+str(curh_hists['data'].GetXaxis().GetBinWidth(0))+' '+yunit)
     ax1.set_ylabel(r'Data/MC')
-    #ax1.set_xlim([0,curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())])
-    #ax0.set_xlim([0,curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())])
     ax0.set_ylim([0,ax0.get_ylim()[1]*1.2])
-    ax0.text(.05,.9,'ATLAS',style='italic',transform=ax0.transAxes)
-    ax0.text(.15,.9,'Work In Progress',transform=ax0.transAxes)
     if kwargs.get('legend') == 'on':
         ax0.legend(loc='best',numpoints=1,prop={'size':10})
     else: pass
@@ -92,7 +92,17 @@ def make_it(*args,**kwargs):
         ax1.set_ylim([0,ax1.get_ylim()[1]/2.0])
     else:
         ax1.set_ylim([0,ax1.get_ylim()[1]])
-    ax1.plot(curh_ratio_x,[1 for _ in xrange(len(curh_ratio_x))],'k--')
+
+    one_line_x = np.linspace(real_x_min,real_x_max,1000)
+    ax1.plot(one_line_x,[1 for _ in xrange(len(one_line_x))],'k--')
+
+    ax1.set_xlim([real_x_min,real_x_max])
+    ax0.set_xlim([real_x_min,real_x_max])
+
+    ax0.text(.05,.93,'ATLAS',style='italic',transform=ax0.transAxes)
+    ax0.text(.15,.93,'Work In Progress',transform=ax0.transAxes)
+    ax0.text(.05,.85,r'$\sqrt{s} = 8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt = 20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes)
+
     fig.savefig(str(in_file_name)+'.plots.mpl/'+str(htype)+'.pdf')
 
 make_it(htype='MET',   xtitle=r'$E_T^{\mathrm{miss}}$ [GeV]',yunit='GeV',infile=in_file,legend='on')
