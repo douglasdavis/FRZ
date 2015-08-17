@@ -53,6 +53,10 @@ def make_it(*args,**kwargs):
     types           = 'stepfilled' #['stepfilled','stepfilled','stepfilled','step']
     alphas          = .75 #[.5,.5,.5,1]
 
+    real_x_min = curh_hists['data'].GetXaxis().GetBinUpEdge(0)
+    real_x_max = curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())
+    bin_xerr   = [curh_hists['data'].GetXaxis().GetBinWidth(i+1)/2.0 for i in xrange(curh_hists['data'].GetNbinsX())]
+
     fig = plt.figure()
     gs  = gsc.GridSpec(2,1,height_ratios=[3,1])
     gs.update(hspace=0.075)
@@ -64,7 +68,7 @@ def make_it(*args,**kwargs):
                  curh_weights['data'],
                  fmt='ko',label=r'Data',
                  yerr=curh_vals_e['data'],
-                 xerr=curh_hists['data'].GetBinWidth(0)*.5)
+                 xerr=bin_xerr)
     ax0.hist(curh_MC_vals,
              bins=curh_bins['data'],
              weights=curh_MC_weights,
@@ -72,9 +76,6 @@ def make_it(*args,**kwargs):
              histtype=types,alpha=alphas,
              color=['orange','green','blue','white'],
              linewidth=1.5)
-
-    real_x_min = curh_hists['data'].GetXaxis().GetBinUpEdge(0)
-    real_x_max = curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())
     
     ax1.set_xlabel(xtitle)
     if 'ytitle' in kwargs:
@@ -87,7 +88,7 @@ def make_it(*args,**kwargs):
         ax0.legend(loc='best',numpoints=1,prop={'size':10})
     else: pass
 
-    ax1.errorbar(curh_ratio_x,curh_ratio_y,fmt='ko',yerr=curh_ratio_yerr,xerr=curh_ratio.GetXaxis().GetBinWidth(0)/2.0)
+    ax1.errorbar(curh_ratio_x,curh_ratio_y,fmt='ko',yerr=curh_ratio_yerr,xerr=bin_xerr)
     if ax1.get_ylim()[1] > 10:
         ax1.set_ylim([0,ax1.get_ylim()[1]/2.0])
     else:
@@ -103,7 +104,7 @@ def make_it(*args,**kwargs):
     ax0.text(.15,.93,'Work In Progress',transform=ax0.transAxes)
     ax0.text(.05,.85,r'$\sqrt{s} = 8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt = 20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes)
 
-    fig.savefig(str(in_file_name)+'.plots.mpl/'+str(htype)+'.pdf')
+    fig.savefig(str(in_file_name)+'.plots.mpl/plot_'+str(htype)+'.pdf')
 
 make_it(htype='MET',   xtitle=r'$E_T^{\mathrm{miss}}$ [GeV]',yunit='GeV',infile=in_file,legend='on')
 make_it(htype='njets', xtitle=r'$N_{\mathrm{jets}}$',infile=in_file,legend='on')
