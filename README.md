@@ -9,6 +9,14 @@ https://git.cern.ch/web/AIDA-analysis.git
 
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/AIDACodeSetup
 
+Requirements
+------------
+The only two requirements are:
+* GNU Make
+* [ROOT](https://root.cern.ch/) (tested with version 6 and higher).
+   `ROOTSYS` environment variable must be set.
+
+
 Instructions for building
 ------------
 In the top level directory execute the following:
