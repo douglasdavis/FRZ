@@ -8,3 +8,4 @@ html
 *dict*
 plot*.eps
 plot*.pdf
+.DS_Store

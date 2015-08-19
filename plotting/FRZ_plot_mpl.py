@@ -57,7 +57,7 @@ def make_it(*args,**kwargs):
     real_x_max = curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())
     bin_xerr   = [curh_hists['data'].GetXaxis().GetBinWidth(i+1)/2.0 for i in xrange(curh_hists['data'].GetNbinsX())]
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(9,6))
     gs  = gsc.GridSpec(2,1,height_ratios=[3,1])
     gs.update(hspace=0.075)
     ax0 = plt.subplot(gs[0])
@@ -77,15 +77,15 @@ def make_it(*args,**kwargs):
              color=['orange','green','blue','white'],
              linewidth=1.5)
     
-    ax1.set_xlabel(xtitle)
+    ax1.set_xlabel(xtitle,size=16)
     if 'ytitle' in kwargs:
-        ax0.set_ylabel(kwargs.get('ytitle'))
+        ax0.set_ylabel(kwargs.get('ytitle'),size=16)
     else:
-        ax0.set_ylabel(r'Events/'+str(curh_hists['data'].GetXaxis().GetBinWidth(0))+' '+yunit)
-    ax1.set_ylabel(r'Data/MC')
+        ax0.set_ylabel(r'Events/'+str(curh_hists['data'].GetXaxis().GetBinWidth(0))+' '+yunit,size=16)
+    ax1.set_ylabel(r'Data/MC',size=16)
     ax0.set_ylim([0,ax0.get_ylim()[1]*1.2])
     if kwargs.get('legend') == 'on':
-        ax0.legend(loc='best',numpoints=1,prop={'size':10})
+        ax0.legend(loc='best',numpoints=1,prop={'size':14})
     else: pass
 
     ax1.errorbar(curh_ratio_x,curh_ratio_y,fmt='ko',yerr=curh_ratio_yerr,xerr=bin_xerr)
@@ -100,9 +100,9 @@ def make_it(*args,**kwargs):
     ax1.set_xlim([real_x_min,real_x_max])
     ax0.set_xlim([real_x_min,real_x_max])
 
-    ax0.text(.05,.93,'ATLAS',style='italic',transform=ax0.transAxes)
-    ax0.text(.15,.93,'Work In Progress',transform=ax0.transAxes)
-    ax0.text(.05,.85,r'$\sqrt{s} = 8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt = 20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes)
+    ax0.text(.05,.92,'ATLAS',style='italic',transform=ax0.transAxes,size=16)
+    ax0.text(.175,.92,'Work In Progress',transform=ax0.transAxes,size=16)
+    ax0.text(.05,.83,r'$\sqrt{s} = 8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt = 20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes,size=16)
 
     max_yticks = 4
     yloc = plt.MaxNLocator(max_yticks)
