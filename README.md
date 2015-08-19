@@ -11,7 +11,8 @@ https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/AIDACodeSetup
 
 Requirements
 ------------
-The only two requirements are:
+The only threerequirements are:
+* A C++ compiler with C++11 support (tested with GCC 5+ and Clang 3.3+)
 * GNU Make
 * [ROOT](https://root.cern.ch/) (tested with version 6 and higher).
    `ROOTSYS` environment variable must be set.
