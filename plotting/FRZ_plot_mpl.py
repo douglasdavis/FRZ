@@ -51,7 +51,7 @@ def make_it(*args,**kwargs):
     curh_MC_weights = [curh_weights['ttbarV'],curh_weights['ttbar'],curh_weights['diboson'],curh_weights['zjets']]
     labels          = [r'$t\bar{t}V$',r'$t\bar{t}$',r'$WW/WZ$',r'$Z$+jets']
     types           = 'stepfilled' #['stepfilled','stepfilled','stepfilled','step']
-    alphas          = .75 #[.5,.5,.5,1]
+    alphas          = .65 #[.5,.5,.5,1]
 
     real_x_min = curh_hists['data'].GetXaxis().GetBinUpEdge(0)
     real_x_max = curh_hists['data'].GetXaxis().GetBinUpEdge(curh_hists['data'].GetNbinsX())
@@ -104,6 +104,10 @@ def make_it(*args,**kwargs):
     ax0.text(.15,.93,'Work In Progress',transform=ax0.transAxes)
     ax0.text(.05,.85,r'$\sqrt{s} = 8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt = 20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes)
 
+    max_yticks = 4
+    yloc = plt.MaxNLocator(max_yticks)
+    ax1.yaxis.set_major_locator(yloc)
+    
     fig.savefig(str(in_file_name)+'.plots.mpl/plot_'+str(htype)+'.pdf')
 
 make_it(htype='MET',   xtitle=r'$E_T^{\mathrm{miss}}$ [GeV]',yunit='GeV',infile=in_file,legend='on')
