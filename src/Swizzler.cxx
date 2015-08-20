@@ -158,10 +158,11 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	lep.obj().set_d0(_lep_trackd0pvunbiased[ilep]);
 	lep.p().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],ELECTRON_MASS*GeV);
 	lep.obj().set_trackPt(_lep_pt[ilep]);
-	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_ELEC) != GOOD_ELEC || !passIPcuts(_lep_trackd0pvunbiased[ilep],
-											 _lep_tracksigd0pvunbiased[ilep],
-											 _lep_z0[ilep],
-											 _lep_eta[ilep]));
+	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_ELEC) != GOOD_ELEC ||
+			       !passIPcuts(_lep_trackd0pvunbiased[ilep],
+					   _lep_tracksigd0pvunbiased[ilep],
+					   _lep_z0[ilep],
+					   _lep_eta[ilep]) );
 	lep.obj().set_trigger( (_lep_inTrigger[ilep] & 1) || (_lep_inTrigger[ilep] & 2) );
 	lep.obj().set_d0cut(_lep_trackd0pvunbiased[ilep] / _lep_tracksigd0pvunbiased[ilep]);
 	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.p().Theta()));
@@ -178,10 +179,11 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
 	lep.obj().set_d0(_lep_trackd0pvunbiased[ilep]);
 	lep.p().SetPtEtaPhiM(_lep_pt[ilep],_lep_eta[ilep],_lep_phi[ilep],MUON_MASS*GeV);
 	lep.obj().set_trackPt(_lep_pt[ilep]);
-	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_MUON) != GOOD_MUON || !passIPcuts(_lep_trackd0pvunbiased[ilep],
-											 _lep_tracksigd0pvunbiased[ilep],
-											 _lep_z0[ilep],
-											 _lep_eta[ilep]));
+	lep.obj().set_isLoose( (_lep_flag[ilep] & GOOD_MUON) != GOOD_MUON ||
+			       !passIPcuts(_lep_trackd0pvunbiased[ilep],
+					   _lep_tracksigd0pvunbiased[ilep],
+					   _lep_z0[ilep],
+					   _lep_eta[ilep]) );
 	lep.obj().set_trigger( (_lep_inTrigger[ilep] & 1) || (_lep_inTrigger[ilep] & 2) );
 	lep.obj().set_d0cut(_lep_trackd0pvunbiased[ilep] / _lep_tracksigd0pvunbiased[ilep]);
 	lep.obj().set_z0cut(_lep_z0[ilep]*std::sin(lep.p().Theta()));
@@ -216,7 +218,9 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
     for ( unsigned int ijet = 0; ijet < _nAllJets && ijet < JETSIZE; ++ijet ) {
       if ( _jet_pt[ijet] >= 25000.0 ) {
 	if ( std::fabs(_jet_eta[ijet]) < 2.5 ) {
-	  if ( std::fabs(_jet_jvf[ijet]) > 0.5 || _jet_pt[ijet] > 50000.0 || std::fabs(_jet_eta[ijet]) > 2.4 ) {
+	  if ( std::fabs(_jet_jvf[ijet]) > 0.5 ||
+	       _jet_pt[ijet] > 50000.0 ||
+	       std::fabs(_jet_eta[ijet]) > 2.4 ) {
 	    FRZ::PhysicsObject<FRZ::Jet> jet;
 	    jet.p().SetPtEtaPhiM(_jet_pt[ijet],_jet_eta[ijet],_jet_phi[ijet],0.0);
 	    jet.obj().set_MV1(_jet_flavor_weight_MV1[ijet]);

@@ -83,14 +83,14 @@ def make_it(*args,**kwargs):
     else:
         ax0.set_ylabel(r'Events/'+str(curh_hists['data'].GetXaxis().GetBinWidth(0))+' '+yunit,size=16)
     ax1.set_ylabel(r'Data/MC',size=16)
-    ax0.set_ylim([0,ax0.get_ylim()[1]*1.2])
+    ax0.set_ylim([0,ax0.get_ylim()[1]*1.25])
     if kwargs.get('legend') == 'on':
         ax0.legend(loc='best',numpoints=1,prop={'size':14})
     else: pass
 
     ax1.errorbar(curh_ratio_x,curh_ratio_y,fmt='ko',yerr=curh_ratio_yerr,xerr=bin_xerr)
     if ax1.get_ylim()[1] > 10:
-        ax1.set_ylim([0,ax1.get_ylim()[1]/2.0])
+        ax1.set_ylim([0,10])
     else:
         ax1.set_ylim([0,ax1.get_ylim()[1]])
 
@@ -100,9 +100,9 @@ def make_it(*args,**kwargs):
     ax1.set_xlim([real_x_min,real_x_max])
     ax0.set_xlim([real_x_min,real_x_max])
 
-    ax0.text(.05,.92,'ATLAS',style='italic',transform=ax0.transAxes,size=16)
-    ax0.text(.175,.92,'Work In Progress',transform=ax0.transAxes,size=16)
-    ax0.text(.05,.83,r'$\sqrt{s} = 8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt = 20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes,size=16)
+    ax0.text(.05,.925,'ATLAS',style='italic',transform=ax0.transAxes,size=16)
+    ax0.text(.175,.925,'Work In Progress',transform=ax0.transAxes,size=16)
+    ax0.text(.05,.805,r'$\sqrt{s}\,=\,8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt\,=\,20.3 \mathrm{\,fb}^{-1}$',transform=ax0.transAxes,size=16)
 
     max_yticks = 4
     yloc = plt.MaxNLocator(max_yticks)
