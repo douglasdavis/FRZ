@@ -38,7 +38,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 
   for ( auto const& f : m_files ) {
     m_FRZtrees.push_back((TTree*)f->Get("FRZ_tree"));
-    m_sampleTrees.push_back((TTree*)f->Get("sample_tree"));
+    m_sampleTrees.push_back((TTree*)f->Get("Sample_tree"));
   }
 
   std::string thirdLepXtitle;
@@ -79,7 +79,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			     lpim_plot_props.xmin,
 			     lpim_plot_props.xmax);
 
-  plot_props njets_plot_props(7,0,7);
+  plot_props njets_plot_props(6,0,6);
   std::string njets_title       = ";N_{jets};Events/"+std::to_string(njets_plot_props.binsize)+" GeV";
   std::string njets_ratio_title = ";N_{jets};Data/MC";
   std::map<std::string,TH1D*> njets;
@@ -88,9 +88,9 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			      njets_plot_props.xmin,
 			      njets_plot_props.xmax);
 
-  for ( int i = 1; i < 7; ++i )
+  for ( int i = 1; i < 6; ++i )
     njets_ratio->GetXaxis()->SetBinLabel(i,std::to_string(i).c_str());
-  njets_ratio->GetXaxis()->SetBinLabel(7,"#geq 7");
+  njets_ratio->GetXaxis()->SetBinLabel(6,"#geq 6");
   
   plot_props tlpt_plot_props(20,12,120);
   std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string(tlpt_plot_props.binsize)+" GeV";
@@ -113,9 +113,10 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   std::string tlptv_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events";
   std::string tlptv_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlptv;
-  double var_bins[5];
-  for ( int i = 0; i < 5; ++ i ) var_bins[i] = bin_lims.at(i);
-  auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),4,var_bins);
+  int arrayn = bin_lims.size();
+  double var_bins[arrayn];
+  for ( int i = 0; i < arrayn; ++ i ) var_bins[i] = bin_lims.at(i);
+  auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),arrayn-1,var_bins);
   
   for ( auto const& entry : procs ) {
     MET[entry] = new TH1D(("MET_"+entry).c_str(),MET_title.c_str(),
@@ -186,10 +187,10 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  temp_hist_HT->Fill(fs->Ht()/1.0e3);
 	  temp_hist_lpim->Fill(fs->leptonPairs().at(z_cand_idx).obj().mass()/1.0e3);
-	  if ( fs->jets().size() < 7 )
+	  if ( fs->jets().size() < 6 )
 	    temp_hist_njets->Fill(fs->jets().size());
 	  else
-	    temp_hist_njets->Fill(7);
+	    temp_hist_njets->Fill(6);
 	}
 	if ( third_loose == 2 ) {
 	  temp_hist_MET->Fill(fs->MET().obj().Et()/1.0e3);
@@ -197,10 +198,10 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 	  temp_hist_tlptv->Fill(fs->leptons().at(third_lep_idx).pT()/1.0e3);
 	  temp_hist_HT->Fill(fs->Ht()/1.0e3);
 	  temp_hist_lpim->Fill(fs->leptonPairs().at(z_cand_idx).obj().mass()/1.0e3);
-	  if ( fs->jets().size() < 7 )
+	  if ( fs->jets().size() < 6 )
 	    temp_hist_njets->Fill(fs->jets().size());
 	  else
-	    temp_hist_njets->Fill(7);
+	    temp_hist_njets->Fill(6);
 	}
       } // if third lepton is requestions e or mu
     } // for all in current tree

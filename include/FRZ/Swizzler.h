@@ -31,7 +31,6 @@ namespace FRZ {
   private:
 
     TChain *_read_chain;
-    TFile  *_out_file;
     bool    _is_data;
     bool    _is_pileup;
     

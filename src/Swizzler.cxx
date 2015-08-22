@@ -105,28 +105,28 @@ void FRZ::Swizzler::loopToFile(const char* out_file_name, const FRZ::SampleHolde
   // Set up the output ROOT file and tree (FRZ will hold final state info
   // sample will hold information about the sample and weighting)
   TFile *out_file    = new TFile(out_file_name,"RECREATE");
-  TTree *FRZ_tree   = new TTree("FRZ_tree","FRZ_tree");
-  TTree *sample_tree = new TTree("sample_tree","sample_tree");
+  TTree *FRZ_tree    = new TTree("FRZ_tree","FRZ_tree");
+  TTree *Sample_tree = new TTree("Sample_tree","Sample_tree");
 
   // Set up and write sample and sample weight information to tree & file
   if ( !_is_data ) {
     _read_chain->GetEntry(0);
     auto sample = sh.getSample(_mc_channel_number);
     auto weight = FRZ::getWeight(sample,_is_pileup);
-    sample_tree->Branch("sample",&sample);
-    sample_tree->Branch("weight",&weight,"weight/F");
-    sample_tree->Fill();
-    sample_tree->Write();
+    Sample_tree->Branch("sample",&sample);
+    Sample_tree->Branch("weight",&weight,"weight/F");
+    Sample_tree->Fill();
+    Sample_tree->Write();
   }
   else {
     FRZ::Sample data_samp;
     data_samp.set_processType("data");
     data_samp.set_processGenerator("data");
     float weight = 1.0;
-    sample_tree->Branch("sample",&data_samp);
-    sample_tree->Branch("weight",&weight,"weight/F");
-    sample_tree->Fill();
-    sample_tree->Write();
+    Sample_tree->Branch("sample",&data_samp);
+    Sample_tree->Branch("weight",&weight,"weight/F");
+    Sample_tree->Fill();
+    Sample_tree->Write();
   }
 
   
