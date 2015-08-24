@@ -11,7 +11,6 @@ from pylab import setp
 
 in_file = ROOT.TFile(in_file_name)
 
-
 def get_content(hist):
     """ the height of each bin """
     return np.array([hist.GetBinContent(i+1)
@@ -74,8 +73,8 @@ def make_it(*args, **kwargs):
     curh_MC_vals    = [curh_vals['ttbarV'],curh_vals['ttbar'],curh_vals['diboson'],curh_vals['zjets']]
     curh_MC_weights = [curh_weights['ttbarV'],curh_weights['ttbar'],curh_weights['diboson'],curh_weights['zjets']]
     labels          = [r'$t\bar{t}V$',r'$t\bar{t}$',r'$WW/WZ$',r'$Z$+jets']
-    types           = 'stepfilled' #['stepfilled','stepfilled','stepfilled','step']
-    alphas          = .65 #[.5,.5,.5,1]
+    h_type          = 'stepfilled'
+    h_alpha         = 1.0
 
     ## set up the plotting canvas
     fig = plt.figure(figsize=(9,6))
@@ -90,9 +89,9 @@ def make_it(*args, **kwargs):
              bins=curh_bins['data'],
              weights=curh_MC_weights,
              label=labels,stacked=True,
-             histtype=types,alpha=alphas,
+             histtype=h_type,alpha=h_alpha,
              color=['orange','green','blue','white'],
-             linewidth=1.5)
+             linewidth=1.25)
 
     ## plot the data
     ax0.errorbar(curh_vals['data'],
@@ -105,7 +104,7 @@ def make_it(*args, **kwargs):
     if 'ytitle' in kwargs:
         ax0.set_ylabel(kwargs.get('ytitle'),size=16)
     else:
-        ax0.set_ylabel(r'Events/'+str(curh_hists['data'].GetXaxis().GetBinWidth(0))+' '+yunit,size=16)
+        ax0.set_ylabel(r'Events/'+str(round(curh_hists['data'].GetXaxis().GetBinWidth(0),2))+' '+yunit,size=16)
     ax0.set_ylim([0,ax0.get_ylim()[1]*1.25])
     if kwargs.get('legend') == 'on':
         ax0.legend(loc='best',numpoints=1,prop={'size':14})
@@ -129,8 +128,8 @@ def make_it(*args, **kwargs):
     ax0.set_xlim([real_x_min,real_x_max])
 
     ## give that nice ATLAS text
-    ax0.text(.05,.925,'ATLAS',style='italic',transform=ax0.transAxes,size=16)
-    ax0.text(.175,.925,'Work In Progress',transform=ax0.transAxes,size=16)
+    ax0.text(.05,.92,'ATLAS',style='italic',transform=ax0.transAxes,size=16)
+    ax0.text(.175,.92,'Work In Progress',transform=ax0.transAxes,size=16)
     ax0.text(.05,.805,
              r'$\sqrt{s}\,=\,8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt\,=\,20.3 \mathrm{\,fb}^{-1}$',
              transform=ax0.transAxes,size=16)

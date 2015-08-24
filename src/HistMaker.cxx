@@ -19,6 +19,7 @@
 #include "FRZ/HistMaker.h"
 #include "FRZ/FinalState.h"
 #include "FRZ/Sample.h"
+#include "FRZ/Common.h"
 
 FRZ::HistMaker::HistMaker() :
   m_thirdLepOpt(0)
@@ -61,7 +62,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			    MET_plot_props.xmin,
 			    MET_plot_props.xmax);
 
-  plot_props HT_plot_props(25,50,450);
+  plot_props HT_plot_props(25,75,450);
   std::string HT_title       = ";H_{T} [GeV];Events/"+std::to_string(HT_plot_props.binsize)+" GeV";
   std::string HT_ratio_title = ";H_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> HT;
@@ -70,7 +71,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 			   HT_plot_props.xmin,
 			   HT_plot_props.xmax);
 
-  plot_props lpim_plot_props(19,72,110);
+  plot_props lpim_plot_props(19,Z_MINUS_15/1.0e3,Z_PLUS_15/1.0e3);
   std::string lpim_title       = ";m_{ll} [GeV];Events/"+std::to_string(lpim_plot_props.binsize)+" GeV";
   std::string lpim_ratio_title = ";m_{ll} [GeV];Data/MC";
   std::map<std::string,TH1D*> lpim;
