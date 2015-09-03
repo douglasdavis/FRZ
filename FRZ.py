@@ -67,6 +67,7 @@ if args_tf.swizzle or args_tf.json_to_root:
         sample_tree.Fill()
         sample_tree.Write()
         out_file.Close()
+        sys.exit(1)
 
     if args_tf.swizzle:
         if args_tf.data:
@@ -78,6 +79,7 @@ if args_tf.swizzle or args_tf.json_to_root:
             a_swizz    = FRZ.Swizzler(True,args['pileup'])
             a_swizz.addFile(args['in_file'])
             a_swizz.loopToFile(out_file,sample_holder)
+            sys.exit(1)
         else:
             split_me   = args['in_file']
             parts_full = split_me.split('mc12_8TeV')
@@ -87,6 +89,7 @@ if args_tf.swizzle or args_tf.json_to_root:
             a_swizz    = FRZ.Swizzler(False,args['pileup'])
             a_swizz.addFile(args['in_file'])
             a_swizz.loopToFile(out_file,sample_holder)
+            sys.exit(1)
 
 if args_tf.make_hists:
     file_names = os.listdir(FRZ_BASE+'/swizzled_files')
@@ -97,7 +100,10 @@ if args_tf.make_hists:
     of = 'hists.pdg_'+str(tl)+'.looseopt_'+str(args['third_loose'])+'.root'
     if hist_maker.run(of,args['third_loose']) == False:
         print 'Something bad happened in HistMaker::run, it returned false'
-
+        sys.exit(1)
+    else:
+        sys.exit(1)
+        
 if args_tf.third_ratios:
     in_file    = ROOT.TFile(args['third_ratios'])
     ratio      = in_file.Get('tlptv_ratio')
@@ -115,7 +121,8 @@ if args_tf.third_ratios:
     bin_err    = [ratio.GetBinError(i+1) for i in xrange(nbins)]
         
     print '\\begin{table}'
-    print '\\caption{Trilepton events with a $Z\\rightarrow\\ell^+\\ell^-$ candidate. Third lepton (the lepton not in the pair forming the $Z$ candidate)',
+    print '\\caption{Trilepton events with a $Z\\rightarrow\\ell^+\\ell^-$ candidate.',
+    print 'Third lepton (the lepton not in the pair forming the $Z$ candidate)',
     print '$p_T$ ranges corresponding to $\\sqrt{s}~=~8$~TeV and $\\int\\mathcal{L}\\,dt~=~20.3~\\text{ fb}^{-1}$.}'
     print '\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l | c | c | c | c }'
     print '\\hline\hline'
@@ -129,7 +136,8 @@ if args_tf.third_ratios:
     print '\\hline\hline'
     print '\\end{tabular*}'
     print '\\end{table}'
-
+    sys.exit(1)
+    
 if args_tf.gen_plots:
     if args_tf.mpl:
         com = 'FRZ_plot_mpl.py '+args['gen_plots']
@@ -139,3 +147,4 @@ if args_tf.gen_plots:
         arg = args['gen_plots']+'.plots'
         com = 'FRZ_plot.py '+args['gen_plots']+' '+arg+' pdf'
         os.system(com)
+    sys.exit(1)
