@@ -27,9 +27,9 @@ namespace FRZ {
 
   private:
 
-    std::vector<FRZ::PhysicsObject<FRZ::Lepton>>      m_leptons;         //< Lepton container
-    std::vector<FRZ::PhysicsObject<FRZ::Jet>>         m_jets;            //< Jet container
-    std::vector<FRZ::PhysicsObject<FRZ::LeptonPair>>  m_leptonPairs;     //< Lepton pair conatiner
+    std::vector<FRZ::PhysicsObject<FRZ::Lepton> >     m_leptons;         //< Lepton container
+    std::vector<FRZ::PhysicsObject<FRZ::Jet> >        m_jets;            //< Jet container
+    std::vector<FRZ::PhysicsObject<FRZ::LeptonPair> > m_leptonPairs;     //< Lepton pair conatiner
     FRZ::PhysicsObject<FRZ::MET>                      m_MET;             //< missing tranvserse energy object
     int                                               m_nZcandidates;    //< total number of z candidate pairs
     double                                            m_Ht;              //< scalar sum of jet, Lepton pT
@@ -48,15 +48,15 @@ namespace FRZ {
     void addJet(const FRZ::PhysicsObject<FRZ::Jet>& j)                 { m_jets.push_back(j);         }
     void addLeptonPair(const FRZ::PhysicsObject<FRZ::LeptonPair>& lp)  { m_leptonPairs.push_back(lp); }
 
-    std::vector<FRZ::PhysicsObject<FRZ::Lepton>>&     leptons()     { return m_leptons;     }
-    std::vector<FRZ::PhysicsObject<FRZ::Jet>>&        jets()        { return m_jets;        }
-    std::vector<FRZ::PhysicsObject<FRZ::LeptonPair>>& leptonPairs() { return m_leptonPairs; }
-    FRZ::PhysicsObject<FRZ::MET>&                     MET()         { return m_MET;         }
+    std::vector<FRZ::PhysicsObject<FRZ::Lepton> >&     leptons()     { return m_leptons;     }
+    std::vector<FRZ::PhysicsObject<FRZ::Jet> >&        jets()        { return m_jets;        }
+    std::vector<FRZ::PhysicsObject<FRZ::LeptonPair> >& leptonPairs() { return m_leptonPairs; }
+    FRZ::PhysicsObject<FRZ::MET>&                      MET()         { return m_MET;         }
 
-    const std::vector<FRZ::PhysicsObject<FRZ::Lepton>>&     leptons()     const { return m_leptons;     }
-    const std::vector<FRZ::PhysicsObject<FRZ::Jet>>&        jets()        const { return m_jets;        }
-    const std::vector<FRZ::PhysicsObject<FRZ::LeptonPair>>& leptonPairs() const { return m_leptonPairs; }
-    const FRZ::PhysicsObject<FRZ::MET>&                     MET()         const { return m_MET;         }
+    const std::vector<FRZ::PhysicsObject<FRZ::Lepton> >&     leptons()     const { return m_leptons;     }
+    const std::vector<FRZ::PhysicsObject<FRZ::Jet> >&        jets()        const { return m_jets;        }
+    const std::vector<FRZ::PhysicsObject<FRZ::LeptonPair> >& leptonPairs() const { return m_leptonPairs; }
+    const FRZ::PhysicsObject<FRZ::MET>&                      MET()         const { return m_MET;         }
     
     int          nZcandidates()   const { return m_nZcandidates;   }
     double       Ht()             const { return m_Ht;             }

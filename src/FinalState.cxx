@@ -17,7 +17,10 @@ FRZ::FinalState::FinalState() :
   m_Ht(-9e9),
   m_ZcandidateIdx(10),
   m_thirdLeptonIdx(10)
-{}
+{
+  m_leptons.reserve(3);
+  m_leptonPairs.reserve(3);
+}
 
 FRZ::FinalState::~FinalState() {}
 
