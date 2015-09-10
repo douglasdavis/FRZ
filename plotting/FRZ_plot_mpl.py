@@ -90,7 +90,7 @@ def make_it(*args, **kwargs):
              weights=curh_MC_weights,
              label=labels,stacked=True,
              histtype=h_type,alpha=h_alpha,
-             color=['orange','green','blue','white'],
+             color=['green','orange','blue','white'],
              linewidth=1.25)
 
     ## plot the data

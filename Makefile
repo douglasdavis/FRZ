@@ -30,20 +30,20 @@ HEADERS := $(filter-out include/FRZ/LinkDef.h \
 all: $(TARGET)
 	-@$(RM) $(FRZ_BASE)/lib/$(DICT)_rdict.pcm
 	-@ln -s $(FRZ_BASE)/src/$(DICT)_rdict.pcm $(FRZ_BASE)/lib/$(DICT)_rdict.pcm
-	@echo "<< Built >>"
+	@echo " [Done]        Built"
 
 $(TARGET): $(OBJECTS) src/$(DICT).o
 	@mkdir -p $(FRZ_BASE)/lib
-	@echo "<< Linking shared object library $@ >>";$(CXX) $(LDFLAGS) -shared -o $@ $^
+	@echo " [libFRZ]      Linking shared object library $@";$(CXX) $(LDFLAGS) -shared -o $@ $^
 
 src/$(DICT).cxx: $(HEADERS) include/FRZ/LinkDef.h
-	@echo "<< Generating ROOT dictionary $@ >>";rootcint -f $@ -I$(FRZ_BASE)/include $^
+	@echo " [Dictionary]  Generating ROOT dictionary $@";rootcint -f $@ -I$(FRZ_BASE)/include $^
 
 src/$(DICT).o: src/$(DICT).cxx
-	@echo "<< Compiling object $@ >>";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
+	@echo " [Dictionary]  Compiling object $@";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
 
 src/%.o: src/%.cxx
-	@echo "<< Compiling object $@ >>";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
+	@echo " [libFRZ]      Compiling object $@";$(CXX) -fPIC $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean
 
