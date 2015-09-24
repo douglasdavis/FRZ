@@ -70,6 +70,10 @@ if args_tf.swizzle or args_tf.json_to_root:
         sys.exit(1)
 
     if args_tf.swizzle:
+        if not os.path.exists(FRZ_BASE+'/swizzled_files'):
+            os.makedirs(FRZ_BASE+'/swizzled_files')
+        else:
+            pass
         if args_tf.data:
             split_me   = args['in_file']
             parts_full = split_me.split('/')
