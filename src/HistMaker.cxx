@@ -14,6 +14,8 @@
 #include "TTree.h"
 #include "TH1D.h"
 #include "THStack.h"
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h"
 
 // FRZ
 #include "FRZ/HistMaker.h"
@@ -94,7 +96,8 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   njets_ratio->GetXaxis()->SetBinLabel(6,"#geq 6");
   
   plot_props tlpt_plot_props(20,12,120);
-  std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"+std::to_string(tlpt_plot_props.binsize)+" GeV";
+  std::string tlpt_title        = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Events/"
+    +std::to_string(tlpt_plot_props.binsize)+" GeV";
   std::string tlpt_ratio_title  = ";3rd lepton "+thirdLepXtitle+" p_{T} [GeV];Data/MC";
   std::map<std::string,TH1D*> tlpt;
   auto tlpt_ratio = new TH1D("tlpt_ratio",tlpt_ratio_title.c_str(),
@@ -140,7 +143,7 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 
   // loop over all trees, make temporary histograms,
   // add them to the correct total histograms.
-  for ( unsigned int i = 0; i < m_FRZtrees.size(); ++i ) {
+  for ( auto const& file_itr : m_files ) {
     auto temp_hist_MET = new TH1D("temp_hist_MET","nothing",
 				  MET_plot_props.nbins,
 				  MET_plot_props.xmin,
@@ -167,18 +170,15 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
 				   tlpt_plot_props.xmax);
 
     auto temp_hist_tlptv = new TH1D("temp_hist_tlptv","nothing",4,var_bins);
-    
-    FRZ::FinalState *fs     = 0;
-    FRZ::Sample     *samp   = 0;
-    float            weight = 0;
-    m_FRZtrees.at(i)->SetBranchAddress("FinalState",&fs);
-    m_sampleTrees.at(i)->SetBranchAddress("sample",&samp);
-    m_sampleTrees.at(i)->SetBranchAddress("weight",&weight);
-    m_sampleTrees.at(i)->GetEntry(0);
-    auto ptype = samp->processType();
 
-    for ( Long64_t iev = 0; iev < m_FRZtrees.at(i)->GetEntries(); ++iev ) {
-      m_FRZtrees.at(i)->GetEntry(iev);
+    TTreeReader readerFRZ_tree("FRZ_tree",file_itr);
+    TTreeReader readerSample_tree("Sample_tree",file_itr);
+
+    TTreeReaderValue<FRZ::Sample>        samp(readerSample_tree,"sample");
+    TTreeReaderValue<float>            weight(readerSample_tree,"weight");
+    TTreeReaderValue<FRZ::FinalState>      fs(readerFRZ_tree,   "FinalState");
+        
+    while ( readerFRZ_tree.Next() ) {
       auto third_lep_idx = fs->thirdLeptonIdx();
       auto z_cand_idx    = fs->ZcandidateIdx();
       if ( fs->leptons().at(third_lep_idx).obj().pdgId() == m_thirdLepOpt ) {
@@ -207,12 +207,16 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
       } // if third lepton is requestions e or mu
     } // for all in current tree
 
-    temp_hist_MET->Scale(weight);
-    temp_hist_HT->Scale(weight);
-    temp_hist_lpim->Scale(weight);
-    temp_hist_tlpt->Scale(weight);
-    temp_hist_tlptv->Scale(weight);
-    temp_hist_njets->Scale(weight);
+
+    readerSample_tree.SetEntry(0);
+    auto ptype = samp->processType();
+
+    temp_hist_MET->Scale(*weight);
+    temp_hist_HT->Scale(*weight);
+    temp_hist_lpim->Scale(*weight);
+    temp_hist_tlpt->Scale(*weight);
+    temp_hist_tlptv->Scale(*weight);
+    temp_hist_njets->Scale(*weight);
     
     if ( ptype == "zlf" || ptype == "zhf" ) {
       MET.at("zjets")->Add(temp_hist_MET);
