@@ -9,7 +9,7 @@ endif
 
 CXX      := g++
 CXXFLAGS := -Wall -I$(FRZ_BASE) -I$(FRZ_BASE)/include -O2 $(shell root-config --cflags)
-LDFLAGS  := -L$(FRZ_BASE)/lib $(shell root-config --glibs)
+LDFLAGS  := -L$(FRZ_BASE)/lib $(shell root-config --glibs) -lTreePlayer
 
 ARCH      = $(shell uname)
 ifeq ($(ARCH),Darwin)
