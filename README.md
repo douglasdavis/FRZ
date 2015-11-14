@@ -10,7 +10,7 @@ https://git.cern.ch/web/AIDA-analysis.git
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/AIDACodeSetup
 
 ## Requirements
-The only three requirements are is [ROOT](https://root.cern.ch/) version 6. (If ROOT 6 is
+The only requirement is [ROOT](https://root.cern.ch/) version 6. (If ROOT 6 is
 installed then all other dependencies are met).
    `ROOTSYS` environment variable must be set.
 
