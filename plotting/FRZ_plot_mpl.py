@@ -127,11 +127,17 @@ def make_it(*args, **kwargs):
     ax1.set_xlim([real_x_min,real_x_max])
     ax0.set_xlim([real_x_min,real_x_max])
 
+    if 'pdg_11' in in_file_name:
+        third_particle = 'e'
+    if 'pdg_13' in in_file_name:
+        third_particle = '\mu'
+    decay_string = r'$\,\,Z\rightarrow ee/\mu\mu + ('+third_particle+')$'
+    
     ## give that nice ATLAS text
     ax0.text(.05,.92,'ATLAS',style='italic',transform=ax0.transAxes,size=16)
-    ax0.text(.175,.92,'Work In Progress',transform=ax0.transAxes,size=16)
+    ax0.text(.175,.92,'Work In Progress '+decay_string,transform=ax0.transAxes,size=16)
     ax0.text(.05,.805,
-             r'$\sqrt{s}\,=\,8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt\,=\,20.3 \mathrm{\,fb}^{-1}$',
+             r'$\sqrt{s}\,=\,8 \mathrm{\,TeV},\,\int\,\mathcal{L}\,dt\,=\,20.3\, \mathrm{\,fb}^{-1}$',
              transform=ax0.transAxes,size=16)
 
     ## make sure not too many ticks on the ratio plot
