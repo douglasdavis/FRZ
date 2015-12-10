@@ -10,10 +10,8 @@ https://git.cern.ch/web/AIDA-analysis.git
 https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/AIDACodeSetup
 
 ## Requirements
-The only three requirements are:
-* A C++ compiler with C++11 support (tested with GCC 5+ and Clang 3.3+)
-* GNU Make
-* [ROOT](https://root.cern.ch/) (tested with version 6 and higher).
+The only requirement is [ROOT](https://root.cern.ch/) version 6. (If ROOT 6 is
+installed then all other dependencies are met).
    `ROOTSYS` environment variable must be set.
 
 
