@@ -34,7 +34,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS) src/$(DICT).o
 	@mkdir -p $(FRZ_BASE)/lib
-	@echo " [libFRZ]      Linking shared object library $@";$(CXX) $(LDFLAGS) -shared -o $@ $^
+	@echo " [libFRZ]      Linking shared object library $@";$(CXX) -shared -o $@ $^ $(LDFLAGS)
 
 src/$(DICT).cxx: $(HEADERS) include/FRZ/LinkDef.h
 	@echo " [Dictionary]  Generating ROOT dictionary $@";rootcint -f $@ -I$(FRZ_BASE)/include $^
