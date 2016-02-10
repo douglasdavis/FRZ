@@ -123,22 +123,22 @@ bool FRZ::HistMaker::run(const std::string& out_name, const int third_loose)
   auto tlptv_ratio = new TH1D("tlptv_ratio",tlptv_ratio_title.c_str(),arrayn-1,var_bins);
   
   for ( auto const& entry : procs ) {
-    MET[entry] = new TH1D(("MET_"+entry).c_str(),MET_title.c_str(),
-			  MET_plot_props.nbins,MET_plot_props.xmin,MET_plot_props.xmax);
+    MET.emplace(entry,new TH1D(("MET_"+entry).c_str(),MET_title.c_str(),
+			       MET_plot_props.nbins,MET_plot_props.xmin,MET_plot_props.xmax));
     
-    HT[entry] = new TH1D(("HT_"+entry).c_str(),HT_title.c_str(),
-			 HT_plot_props.nbins,HT_plot_props.xmin,HT_plot_props.xmax);
+    HT.emplace(entry,new TH1D(("HT_"+entry).c_str(),HT_title.c_str(),
+			      HT_plot_props.nbins,HT_plot_props.xmin,HT_plot_props.xmax));
 
-    lpim[entry] = new TH1D(("lpim_"+entry).c_str(),lpim_title.c_str(),
-			   lpim_plot_props.nbins,lpim_plot_props.xmin,lpim_plot_props.xmax);
+    lpim.emplace(entry,new TH1D(("lpim_"+entry).c_str(),lpim_title.c_str(),
+				lpim_plot_props.nbins,lpim_plot_props.xmin,lpim_plot_props.xmax));
 
-    njets[entry] = new TH1D(("njets_"+entry).c_str(),njets_title.c_str(),
-			    njets_plot_props.nbins,njets_plot_props.xmin,njets_plot_props.xmax);
+    njets.emplace(entry,new TH1D(("njets_"+entry).c_str(),njets_title.c_str(),
+				 njets_plot_props.nbins,njets_plot_props.xmin,njets_plot_props.xmax));
     
-    tlpt[entry] = new TH1D(("tlpt_"+entry).c_str(),tlpt_title.c_str(),
-			   tlpt_plot_props.nbins,tlpt_plot_props.xmin,tlpt_plot_props.xmax);
+    tlpt.emplace(entry,new TH1D(("tlpt_"+entry).c_str(),tlpt_title.c_str(),
+				tlpt_plot_props.nbins,tlpt_plot_props.xmin,tlpt_plot_props.xmax));
 
-    tlptv[entry] = new TH1D(("tlptv_"+entry).c_str(),tlptv_title.c_str(),4,var_bins);
+    tlptv.emplace(entry,new TH1D(("tlptv_"+entry).c_str(),tlptv_title.c_str(),4,var_bins));
   }
 
   // loop over all trees, make temporary histograms,
